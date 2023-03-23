@@ -5,11 +5,10 @@ using UnityEngine;
 
 public class MouseController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject villagerPrefab;
+    private VillagerInfo villager;
+
+    public bool villagerPlaced = false;
 
     // Update is called once per frame
     void LateUpdate()
@@ -18,15 +17,34 @@ public class MouseController : MonoBehaviour
 
         if (focusedTileHit.HasValue)
         {
-            GameObject overlayTile = focusedTileHit.Value.collider.gameObject;
+            OverlayTile overlayTile = focusedTileHit.Value.collider.gameObject.GetComponent<OverlayTile>();
 
             transform.position = overlayTile.transform.position;
             gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
 
-            if (Input.GetMouseButtonDown(0))
+            // show overlay tile
+            /*if (Input.GetMouseButtonDown(0))
             {
                 overlayTile.GetComponent<OverlayTile>().ShowTile();
-        }
+            }*/
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!villagerPlaced) 
+                {
+                    if (villager == null)
+                    {
+                        villager = Instantiate(villagerPrefab).GetComponent<VillagerInfo>();
+                        PositionCharacterOnTile(overlayTile);
+                        villagerPlaced = true;
+                    }
+                }
+                else
+                {
+                    overlayTile.ShowTile();
+                }
+                
+            }
         }
 
         
@@ -44,5 +62,12 @@ public class MouseController : MonoBehaviour
             return hits.OrderByDescending(i => i.collider.transform.position.z).First();
         }
         return null;
+    }
+
+    private void PositionCharacterOnTile(OverlayTile tile)
+    {
+        villager.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z);
+        villager.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder + 5;
+        villager.activeTile = tile;
     }
 }
