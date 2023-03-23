@@ -12,7 +12,7 @@ public class MouseController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         var focusedTileHit = GetFocusedOnTile();
 
@@ -22,7 +22,14 @@ public class MouseController : MonoBehaviour
 
             transform.position = overlayTile.transform.position;
             gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                overlayTile.GetComponent<OverlayTile>().ShowTile();
         }
+        }
+
+        
     }
 
     public RaycastHit2D? GetFocusedOnTile()
