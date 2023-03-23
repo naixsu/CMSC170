@@ -58,11 +58,13 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        Debug.Log(map);
+        // print methods
+
+        /*Debug.Log(map);
         Debug.Log("Printing all elements in dict");
 
         foreach (KeyValuePair<Vector2Int, OverlayTile> kv in map)
-            Debug.Log(kv.Value.ToString());
+            Debug.Log(kv.Value.ToString());*/
 
     }
 
