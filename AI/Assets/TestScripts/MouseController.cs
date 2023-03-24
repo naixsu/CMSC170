@@ -41,9 +41,9 @@ public class MouseController : MonoBehaviour
                 }
                 else
                 {
-                    overlayTile.ShowTile();
+                    overlayTile.UntillTile();
                 }
-                
+
             }
 
             if (Input.GetMouseButtonDown(1) && villagerPlaced)
