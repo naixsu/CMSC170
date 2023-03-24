@@ -25,11 +25,72 @@ public class MapManager : MonoBehaviour
         {
             instance = this;
         }
+
+        GameManager.OnStateChange += GameManager_OnStateChange;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnStateChange -= GameManager_OnStateChange;
+    }
+
+    private void GameManager_OnStateChange(GameManager.GameState state)
+    {
+        if (state == GameManager.GameState.SetUp)
+        {
+            SetUp();
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        /*map = new Dictionary<Vector2Int, OverlayTile>();
+
+        var tileMap = gameObject.GetComponentInChildren<Tilemap>();
+
+        BoundsInt bounds = tileMap.cellBounds;
+
+        // loop through our tiles and instantiate an overlay container
+        for (int x = bounds.min.x; x < bounds.max.x; x++)
+        {
+            for (int y = bounds.min.y; y < bounds.max.y; y++)
+            {
+                var tileLocation = new Vector3Int(x, y);
+                var tileKey = new Vector2Int(x, y);
+
+                if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
+                {
+                    var overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
+                    var cellWorldPosition = tileMap.GetCellCenterWorld(tileLocation);
+
+                    //Debug.Log(cellWorldPosition);
+
+                    overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z + 1);
+                    overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder + 1;
+                    overlayTile.gridLocation = tileLocation;
+                    map.Add(tileKey, overlayTile);
+
+                }
+            }
+        }
+
+        CenterCamera(bounds);*/
+        
+
+        // print methods
+
+        /*Debug.Log(map);
+        Debug.Log("Printing all elements in dict");
+
+        foreach (KeyValuePair<Vector2Int, OverlayTile> kv in map)
+            Debug.Log(kv.Value.ToString());*/
+
+    }
+
+    private void SetUp()
+    {
+        Debug.Log("Setting Up");
         map = new Dictionary<Vector2Int, OverlayTile>();
 
         var tileMap = gameObject.GetComponentInChildren<Tilemap>();
@@ -61,16 +122,9 @@ public class MapManager : MonoBehaviour
         }
 
         CenterCamera(bounds);
-        
 
-        // print methods
-
-        /*Debug.Log(map);
-        Debug.Log("Printing all elements in dict");
-
-        foreach (KeyValuePair<Vector2Int, OverlayTile> kv in map)
-            Debug.Log(kv.Value.ToString());*/
-
+        Debug.Log("Finished Setting Up");
+        GameManager.instance.UpdateGameState(GameManager.GameState.MouseControl);
     }
 
     private void CenterCamera(BoundsInt bounds)
