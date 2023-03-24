@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class OverlayTile : MonoBehaviour
 {
+    #region PATHFINDING VARS
+    public int _G;
+    public int _H;
+    public int _F { get { return _G + _H; } }
+    public bool isBlocked;
+    public OverlayTile previous;
+
+    public Vector3Int gridLocation;
+    #endregion
+
+
     [SerializeField] private Sprite overlayTile;
     public bool isTilled;
     
