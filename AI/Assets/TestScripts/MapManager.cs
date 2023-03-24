@@ -75,8 +75,8 @@ public class MapManager : MonoBehaviour
 
     private void CenterCamera(BoundsInt bounds)
     {
-        Debug.Log(bounds + " " + bounds.size.x + " " + bounds.size.y);
-        Debug.Log("I couldn't make the camera be centered BonkSquirt");
+        /*Debug.Log(bounds + " " + bounds.size.x + " " + bounds.size.y);
+        Debug.Log("I couldn't make the camera be centered BonkSquirt");*/
 
         Vector3 center = bounds.center - new Vector3(0.5f, 0.5f, 0);
         _camera.transform.position = new Vector3(center.x, bounds.center.y, -10);

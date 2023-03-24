@@ -12,7 +12,10 @@ public class MouseController : MonoBehaviour
 
     public float speed;
     public bool villagerPlaced = false;
-    private List<OverlayTile> path = new List<OverlayTile>();
+    public List<OverlayTile> path = new List<OverlayTile>();
+    public List<OverlayTile> tilledTiles = new List<OverlayTile>();
+
+    public bool isMoving;
 
     private void Start()
     {
@@ -20,7 +23,7 @@ public class MouseController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
         var focusedTileHit = GetFocusedOnTile();
 
@@ -58,19 +61,22 @@ public class MouseController : MonoBehaviour
             if (Input.GetMouseButtonDown(1) && villagerPlaced)
             {
                 overlayTile.TillTile();
+                tilledTiles.Add(overlayTile);
             }
 
             if (Input.GetMouseButtonDown(2) && villagerPlaced)
             {
-                Debug.Log("Finding path");
-                path = pathFinder.FindPath(villager.activeTile, overlayTile);
-
-                Debug.Log(path + " " + path.Count);
+                Debug.Log("Finding path at " + tilledTiles[0].gridLocation);
+                path = pathFinder.FindPath(villager.activeTile, tilledTiles[0]); // initial path
             }
+
+            
         }
 
         CheckMove();
-        
+
+        // CheckMove();
+
     }
 
     private void CheckMove()
@@ -78,6 +84,20 @@ public class MouseController : MonoBehaviour
         if (path.Count > 0)
         {
             MoveAlongPath();
+            isMoving = true;
+        }
+
+        if (tilledTiles.Count > 0 && isMoving)
+        {
+            if (path.Count == 0)
+            {
+                isMoving = false;
+                tilledTiles.RemoveAt(0);
+                if (tilledTiles.Count > 0) // get new path
+                {
+                    path = pathFinder.FindPath(villager.activeTile, tilledTiles[0]);
+                }
+            }
         }
     }
 
@@ -90,7 +110,7 @@ public class MouseController : MonoBehaviour
         if (Vector2.Distance(villager.transform.position, path[0].transform.position) < 0.001f)
         {
             PositionCharacterOnTile(path[0]);
-            path.RemoveAt(0);
+            path.RemoveAt(0); 
         }
     }
 
