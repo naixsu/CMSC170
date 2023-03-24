@@ -82,5 +82,78 @@ public class MapManager : MonoBehaviour
         _camera.transform.position = new Vector3(center.x, bounds.center.y, -10);
     }
 
+    public List<OverlayTile> GetNeighborTiles(OverlayTile currentOverlayTile)
+    {
+        // var map = MapManager.Instance.map;
+
+        /*Dictionary<Vector2Int, OverlayTile> tileToSearch = new Dictionary<Vector2Int, OverlayTile>();
+
+        if (searchableTiles.Count > 0)
+        {
+            foreach (var searchableTile in searchableTiles)
+            {
+                tileToSearch.Add(searchableTile.grid2DLocation, searchableTile);
+            }
+        }
+        else
+        {
+            tileToSearch = map;
+        }*/
+
+        var tileToSearch = map;
+
+        List<OverlayTile> neighbors = new List<OverlayTile>();
+
+        #region GET NEIGHBORS
+
+        // top
+        Vector2Int locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x,
+            currentOverlayTile.gridLocation.y + 1
+            );
+
+        if (tileToSearch.ContainsKey(locationToCheck))
+        {
+            neighbors.Add(tileToSearch[locationToCheck]);
+        }
+
+        // down
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x,
+            currentOverlayTile.gridLocation.y - 1
+            );
+
+        if (tileToSearch.ContainsKey(locationToCheck))
+        {
+            neighbors.Add(tileToSearch[locationToCheck]);
+        }
+
+        // left
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x - 1,
+            currentOverlayTile.gridLocation.y
+            );
+
+        if (tileToSearch.ContainsKey(locationToCheck))
+        {
+            neighbors.Add(tileToSearch[locationToCheck]);
+        }
+
+        // right
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x + 1,
+            currentOverlayTile.gridLocation.y
+            );
+
+        if (tileToSearch.ContainsKey(locationToCheck))
+        {
+            neighbors.Add(tileToSearch[locationToCheck]);
+        }
+
+        #endregion
+
+        return neighbors;
+    }
+
 
 }

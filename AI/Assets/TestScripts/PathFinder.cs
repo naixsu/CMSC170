@@ -27,7 +27,8 @@ public class PathFinder
 
             }
 
-            var neighborTiles = GetNeighborTiles(currentOverlayTile);
+            // var neighborTiles = GetNeighborTiles(currentOverlayTile);
+            var neighborTiles = MapManager.Instance.GetNeighborTiles(currentOverlayTile);
 
             foreach (var neighbor in neighborTiles)
             {
@@ -77,7 +78,7 @@ public class PathFinder
         return Mathf.Abs(start.gridLocation.x - neighbor.gridLocation.x) + Mathf.Abs(start.gridLocation.y - neighbor.gridLocation.y);
     }
 
-    private List<OverlayTile> GetNeighborTiles(OverlayTile currentOverlayTile)
+    /*private List<OverlayTile> GetNeighborTiles(OverlayTile currentOverlayTile)
     {
         var map = MapManager.Instance.map;
 
@@ -132,5 +133,5 @@ public class PathFinder
         #endregion
 
         return neighbors;
-    }
+    }*/
 }

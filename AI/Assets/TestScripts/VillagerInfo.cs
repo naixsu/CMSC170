@@ -9,7 +9,7 @@ public class VillagerInfo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        seeds = MapManager.Instance.map.Count;
+        // seeds = MapManager.Instance.map.Count;
     }
 
     // Update is called once per frame
