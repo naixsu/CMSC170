@@ -13,6 +13,7 @@ public class MapManager : MonoBehaviour
     public GameObject overlayContainer;
 
     public Dictionary<Vector2Int, OverlayTile> map;
+    [SerializeField] private Transform _camera;
 
     private void Awake()
     {
@@ -59,6 +60,9 @@ public class MapManager : MonoBehaviour
             }
         }
 
+        CenterCamera(bounds);
+        
+
         // print methods
 
         /*Debug.Log(map);
@@ -67,6 +71,15 @@ public class MapManager : MonoBehaviour
         foreach (KeyValuePair<Vector2Int, OverlayTile> kv in map)
             Debug.Log(kv.Value.ToString());*/
 
+    }
+
+    private void CenterCamera(BoundsInt bounds)
+    {
+        Debug.Log(bounds + " " + bounds.size.x + " " + bounds.size.y);
+        Debug.Log("I couldn't make the camera be centered BonkSquirt");
+
+        Vector3 center = bounds.center - new Vector3(0.5f, 0.5f, 0);
+        _camera.transform.position = new Vector3(center.x, bounds.center.y, -10);
     }
 
 
