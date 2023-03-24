@@ -8,258 +8,83 @@ using UnityEngine;
 public class MouseController : MonoBehaviour
 {
     public GameObject villagerPrefab;
-    private VillagerInfo villager;
-    private PathFinder pathFinder;
-    private RangeFinder rangeFinder;
-    private Coroutine coroutine;
+    public VillagerInfo villager;
 
-    public float speed;
-    public int range;
-    public int waitTime;
+    public bool mouseControl;
     public bool villagerPlaced = false;
     public bool isMoving;
-    public bool tileFound;
-    public bool plantingState;
-    public List<OverlayTile> path = new List<OverlayTile>();
+
     public List<OverlayTile> tilledTiles = new List<OverlayTile>();
-    public List<OverlayTile> inRangeTiles = new List<OverlayTile>();
 
 
+
+    private void Awake()
+    {
+        GameManager.OnStateChange += GameManager_OnStateChange;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnStateChange -= GameManager_OnStateChange;
+    }
+
+    private void GameManager_OnStateChange(GameManager.GameState state)
+    {
+        if (state == GameManager.GameState.MouseControl)
+        {
+            mouseControl = true;
+        }
+    }
 
     private void Start()
     {
-        pathFinder = new PathFinder();
-        rangeFinder = new RangeFinder();
-        range = 1;
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        var focusedTileHit = GetFocusedOnTile();
-
-        if (focusedTileHit.HasValue)
+        if (mouseControl)
         {
-            OverlayTile overlayTile = focusedTileHit.Value.collider.gameObject.GetComponent<OverlayTile>();
+            var focusedTileHit = GetFocusedOnTile();
 
-            transform.position = overlayTile.transform.position;
-            gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
-
-            // show overlay tile
-            /*if (Input.GetMouseButtonDown(0))
+            if (focusedTileHit.HasValue)
             {
-                overlayTile.GetComponent<OverlayTile>().ShowTile();
-            }*/
+                OverlayTile overlayTile = focusedTileHit.Value.collider.gameObject.GetComponent<OverlayTile>();
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (!villagerPlaced) 
+                transform.position = overlayTile.transform.position;
+                gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
+
+                if (Input.GetMouseButtonDown(0))
                 {
-                    if (villager == null)
+                    if (!villagerPlaced)
                     {
-                        villager = Instantiate(villagerPrefab).GetComponent<VillagerInfo>();
-                        PositionCharacterOnTile(overlayTile);
-                        villagerPlaced = true;
-
-                        // GetInRangeTiles();
+                        if (villager == null)
+                        {
+                            villager = Instantiate(villagerPrefab).GetComponent<VillagerInfo>();
+                            PositionCharacterOnTile(overlayTile);
+                            villagerPlaced = true;
+                        }
                     }
+                    else
+                    {
+                        overlayTile.UntillTile();
+                        villager.seeds--;
+                    }
+
                 }
-                else
+
+                if (Input.GetMouseButtonDown(1) && villagerPlaced)
                 {
-                    overlayTile.UntillTile();
-                    villager.seeds--;
-                }
-
-            }
-
-            if (Input.GetMouseButtonDown(1) && villagerPlaced)
-            {
-                overlayTile.TillTile();
-                villager.seeds++;
-                tilledTiles.Add(overlayTile);
-            }
-
-            /*if (Input.GetMouseButtonDown(2) && villagerPlaced && tilledTiles.Count > 0 && !isMoving)
-            {
-                Debug.Log("Finding path at " + tilledTiles[0].gridLocation);
-                path = pathFinder.FindPath(villager.activeTile, tilledTiles[0]); // initial path
-                //path = pathFinder.FindPath(villager.activeTile, overlayTile, inRangeTiles);
-            }*/
-
-            
-
-
-
-        }
-
-        if (Input.GetMouseButtonDown(2) && villagerPlaced && tilledTiles.Count > 0 && !isMoving)
-        {
-            plantingState = true;
-            GetInRangeTiles();
-            //path = pathFinder.FindPath(villager.activeTile, tilledTiles[0]); // initial path
-        }
-
-
-
-        CheckMove();
-        CheckPlant();
-
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            range++;
-            GetInRangeTiles();
-        }
-            
-
-        // CheckMove();
-
-    }
-
-    private void CheckPlant()
-    {
-        if (villagerPlaced && villager.seeds == 0 && plantingState)
-        {
-            plantingState = false;
-            Debug.Log("All seeds have been planted");
-            EditorApplication.isPaused = true;
-        }
-    }
-
-    private IEnumerator AddRange()
-    {
-        yield return new WaitForSeconds(waitTime);
-
-        if (tilledTiles.Count > 0 && !isMoving)
-        {
-            range++;
-            GetInRangeTiles();
-        }
-        
-
-    }
-
-    private void RemoveRange()
-    {
-        inRangeTiles = new List<OverlayTile>();
-    }
-
-    private void RangeDetection()
-    {
-        foreach (var tile in inRangeTiles)
-        {
-            //tile.ShowTile(0.5f);
-            tile.HighlightTile();
-            if (tile.isTilled && !tile.hasSeed)
-            {
-                tileFound = true;
-
-                //Debug.Log("Found tilled tile at " + tile.gridLocation);
-                path = pathFinder.FindPath(villager.activeTile, tile);
-                break;
-            }
-        }
-    }
-
-    private void HideHighlightRange()
-    {
-        foreach (var tile in inRangeTiles)
-        {
-            tile.HideHighlightTile();
-        }
-    }
-
-    private void GetInRangeTiles()
-    {
-        tileFound = false;
-
-        /*foreach (var tile in inRangeTiles)
-        {
-            tile.HideHighlightTile();
-        }*/
-        HideHighlightRange();
-
-        inRangeTiles = rangeFinder.GetTilesInRange(villager.activeTile, range);
-
-        /*foreach (var tile in inRangeTiles)
-        {
-            //tile.ShowTile(0.5f);
-            tile.HighlightTile();
-            if (tile.isTilled && !tile.hasSeed)
-            {
-                tileFound = true;
-
-                //Debug.Log("Found tilled tile at " + tile.gridLocation);
-                path = pathFinder.FindPath(villager.activeTile, tile);
-                break;
-            }
-        }*/
-        RangeDetection();
-
-
-        if (tileFound)
-        {
-            Debug.Log("Stop coroutine");
-            StopCoroutine(coroutine);
-        }
-        else if (!tileFound && !isMoving)
-        {
-            coroutine = StartCoroutine(AddRange());
-        }
-            
-    }
-
-    private void CheckMove()
-    {
-        if (path.Count > 0)
-        {
-            MoveAlongPath();
-            isMoving = true;
-        }
-
-        if (tilledTiles.Count > 0 && isMoving)
-        {
-            if (path.Count == 0)
-            {
-                // plant seed
-                villager.activeTile.PlantSeed();
-                villager.seeds--;
-                isMoving = false;
-
-                // reset range
-                range = 1;
-
-                // hide highlight range and remove past range
-                HideHighlightRange();
-                RemoveRange();
-
-                // GetInRangeTiles();  
-
-                // pop one tilled tile from the list
-                tilledTiles.RemoveAt(0);
-                if (tilledTiles.Count > 0) // get new path
-                {
-                    Debug.Log("there are still " + tilledTiles.Count + " more tilled tiles");
-                    GetInRangeTiles();
-                    //path = pathFinder.FindPath(villager.activeTile, tilledTiles[0]);
-                    //path = pathFinder.FindPath(villager.activeTile, overlayTile, inRangeTiles);
+                    overlayTile.TillTile();
+                    villager.seeds++;
+                    tilledTiles.Add(overlayTile);
                 }
             }
-        }
-    }
 
-    private void MoveAlongPath()
-    {
-
-        var step = speed * Time.deltaTime;
-        
-        villager.transform.position = Vector2.MoveTowards(villager.transform.position, path[0].transform.position, step);
-
-        if (Vector2.Distance(villager.transform.position, path[0].transform.position) < 0.001f)
-        {
-            PositionCharacterOnTile(path[0]);
-            path.RemoveAt(0); 
+            if (Input.GetMouseButtonDown(2) && villagerPlaced && tilledTiles.Count > 0 && !isMoving)
+            {
+                GameManager.instance.UpdateGameState(GameManager.GameState.PlantSeeds);
+            }
         }
     }
 
@@ -277,7 +102,7 @@ public class MouseController : MonoBehaviour
         return null;
     }
 
-    private void PositionCharacterOnTile(OverlayTile tile)
+    public void PositionCharacterOnTile(OverlayTile tile)
     {
         villager.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z);
         villager.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder + 10;
