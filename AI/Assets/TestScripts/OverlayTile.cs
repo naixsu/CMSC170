@@ -17,6 +17,7 @@ public class OverlayTile : MonoBehaviour
 
 
     [SerializeField] private Sprite overlayTile;
+    [SerializeField] private Sprite plantedSprite;
     public bool isTilled;
     public bool hasSeed;
     
@@ -34,6 +35,7 @@ public class OverlayTile : MonoBehaviour
         if (!hasSeed)
         {
             this.hasSeed = true;
+            this.GetComponent<SpriteRenderer>().sprite = plantedSprite;
             Debug.Log("Planted seed at tile " + this.gameObject.transform.position.x + " " + this.gameObject.transform.position.y);
         }
     }
