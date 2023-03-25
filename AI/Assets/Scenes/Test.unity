@@ -207,6 +207,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &545539039
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 545539041}
+  - component: {fileID: 545539040}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &545539040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545539039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2e085499c08c4b459f07e0b005ffbb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  plantManager: {fileID: 1610813631}
+--- !u!4 &545539041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545539039}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.025385149, y: 0.24119349, z: -0.01997109}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &760314989
 GameObject:
   m_ObjectHideFlags: 0
@@ -1631,6 +1677,61 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1610813630
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1610813632}
+  - component: {fileID: 1610813631}
+  m_Layer: 0
+  m_Name: Plant Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1610813631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610813630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd208243bd99aca47a2ab66eb9f1a1c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseController: {fileID: 1887063086}
+  waitTime: 1
+  range: 1
+  speed: 5
+  plantingState: 0
+  harvestingState: 0
+  isMoving: 0
+  tileFound: 0
+  path: []
+  tilledTiles: []
+  inRangeTiles: []
+--- !u!4 &1610813632
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610813630}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.025385149, y: 0.24119349, z: -0.01997109}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1653672666
 GameObject:
   m_ObjectHideFlags: 0
@@ -1760,15 +1861,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   villagerPrefab: {fileID: 8953717638772790955, guid: f4a94df9308dc884da311eb2e6086370, type: 3}
-  speed: 5
-  range: 0
-  waitTime: 1
+  villager: {fileID: 0}
+  mouseControl: 0
   villagerPlaced: 0
   isMoving: 0
-  tileFound: 0
-  path: []
   tilledTiles: []
-  inRangeTiles: []
 --- !u!1 &2097383430
 GameObject:
   m_ObjectHideFlags: 0
