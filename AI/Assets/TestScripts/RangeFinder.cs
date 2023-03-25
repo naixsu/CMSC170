@@ -7,16 +7,19 @@ public class RangeFinder
 {
     public List<OverlayTile> GetTilesInRange(OverlayTile startingTile, int range)
     {
+        // initialize
         var inRangeTiles = new List<OverlayTile>();
+        // the range of tiles to get tiles in range
         int stepCount = 0;
-
-        // add villager's active tile to range list
-        //inRangeTiles.Add(startingTile);
 
         var tileForPreviousStep = new List<OverlayTile>();
         tileForPreviousStep.Add(startingTile);
 
 
+        // basically just get the neighboring tiles
+        // but range increases
+        // if range increases, the neighboring tiles of each neighbor will also be returned
+        // and so on
         while (stepCount < range)
         {
             var neighborTiles = new List<OverlayTile>();
@@ -31,6 +34,7 @@ public class RangeFinder
             stepCount++;
         }
 
+        // return a list of distinct tiles
         return inRangeTiles.Distinct().ToList();
     }
 }

@@ -15,6 +15,8 @@ public class MapManager : MonoBehaviour
     public Dictionary<Vector2Int, OverlayTile> map;
     [SerializeField] private Transform _camera;
 
+
+    #region GAME MANAGER
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -42,59 +44,24 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    #endregion
+
     // Start is called before the first frame update
     void Start()
     {
-        /*map = new Dictionary<Vector2Int, OverlayTile>();
-
-        var tileMap = gameObject.GetComponentInChildren<Tilemap>();
-
-        BoundsInt bounds = tileMap.cellBounds;
-
-        // loop through our tiles and instantiate an overlay container
-        for (int x = bounds.min.x; x < bounds.max.x; x++)
-        {
-            for (int y = bounds.min.y; y < bounds.max.y; y++)
-            {
-                var tileLocation = new Vector3Int(x, y);
-                var tileKey = new Vector2Int(x, y);
-
-                if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
-                {
-                    var overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
-                    var cellWorldPosition = tileMap.GetCellCenterWorld(tileLocation);
-
-                    //Debug.Log(cellWorldPosition);
-
-                    overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z + 1);
-                    overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder + 1;
-                    overlayTile.gridLocation = tileLocation;
-                    map.Add(tileKey, overlayTile);
-
-                }
-            }
-        }
-
-        CenterCamera(bounds);*/
         
-
-        // print methods
-
-        /*Debug.Log(map);
-        Debug.Log("Printing all elements in dict");
-
-        foreach (KeyValuePair<Vector2Int, OverlayTile> kv in map)
-            Debug.Log(kv.Value.ToString());*/
-
     }
 
     private void SetUp()
     {
         Debug.Log("Setting Up");
+        // get a dictionary of all the tiles in the screen
         map = new Dictionary<Vector2Int, OverlayTile>();
 
         var tileMap = gameObject.GetComponentInChildren<Tilemap>();
+        var count = 0;
 
+        // the tilemap's bounds (position , size)
         BoundsInt bounds = tileMap.cellBounds;
 
         // loop through our tiles and instantiate an overlay container
@@ -105,57 +72,49 @@ public class MapManager : MonoBehaviour
                 var tileLocation = new Vector3Int(x, y);
                 var tileKey = new Vector2Int(x, y);
 
+                // add to dictionary
                 if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                 {
+                    // instantiate the gameObject
                     var overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
+                    // change the name for better tracking purposes
+                    overlayTile.name = overlayTile.name + "_" + count++;
+                    // get the coordinates for the tile in the scene
                     var cellWorldPosition = tileMap.GetCellCenterWorld(tileLocation);
 
-                    //Debug.Log(cellWorldPosition);
-
+                    // assign the gameObject's position according to its tileMap position
                     overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z + 1);
+                    // adjust the sprite's sorting order
                     overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder + 1;
+                    // assign its gridLocation to be used in pathfinding
                     overlayTile.gridLocation = tileLocation;
+                    // add to dictionary
                     map.Add(tileKey, overlayTile);
-
                 }
             }
         }
 
+        // try to center camera based on the tilemap's bounds
+        // need to make this function perfect
         CenterCamera(bounds);
 
+
+        // switch GameState once setup is finished
         Debug.Log("Finished Setting Up");
         GameManager.instance.UpdateGameState(GameManager.GameState.MouseControl);
     }
 
     private void CenterCamera(BoundsInt bounds)
     {
-        /*Debug.Log(bounds + " " + bounds.size.x + " " + bounds.size.y);
-        Debug.Log("I couldn't make the camera be centered BonkSquirt");*/
-
         Vector3 center = bounds.center - new Vector3(0.5f, 0.5f, 0);
         _camera.transform.position = new Vector3(center.x, bounds.center.y, -10);
     }
 
     public List<OverlayTile> GetNeighborTiles(OverlayTile currentOverlayTile)
     {
-        // var map = MapManager.Instance.map;
+        // pathfinding algorithm
 
-        /*Dictionary<Vector2Int, OverlayTile> tileToSearch = new Dictionary<Vector2Int, OverlayTile>();
-
-        if (searchableTiles.Count > 0)
-        {
-            foreach (var searchableTile in searchableTiles)
-            {
-                tileToSearch.Add(searchableTile.grid2DLocation, searchableTile);
-            }
-        }
-        else
-        {
-            tileToSearch = map;
-        }*/
-
-        var tileToSearch = map;
-
+        // list of neighboring tiles top, down, left, right
         List<OverlayTile> neighbors = new List<OverlayTile>();
 
         #region GET NEIGHBORS
@@ -166,9 +125,9 @@ public class MapManager : MonoBehaviour
             currentOverlayTile.gridLocation.y + 1
             );
 
-        if (tileToSearch.ContainsKey(locationToCheck))
+        if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(tileToSearch[locationToCheck]);
+            neighbors.Add(map[locationToCheck]);
         }
 
         // down
@@ -177,9 +136,9 @@ public class MapManager : MonoBehaviour
             currentOverlayTile.gridLocation.y - 1
             );
 
-        if (tileToSearch.ContainsKey(locationToCheck))
+        if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(tileToSearch[locationToCheck]);
+            neighbors.Add(map[locationToCheck]);
         }
 
         // left
@@ -188,9 +147,9 @@ public class MapManager : MonoBehaviour
             currentOverlayTile.gridLocation.y
             );
 
-        if (tileToSearch.ContainsKey(locationToCheck))
+        if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(tileToSearch[locationToCheck]);
+            neighbors.Add(map[locationToCheck]);
         }
 
         // right
@@ -199,9 +158,9 @@ public class MapManager : MonoBehaviour
             currentOverlayTile.gridLocation.y
             );
 
-        if (tileToSearch.ContainsKey(locationToCheck))
+        if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(tileToSearch[locationToCheck]);
+            neighbors.Add(map[locationToCheck]);
         }
 
         #endregion
