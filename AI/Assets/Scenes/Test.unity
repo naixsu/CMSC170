@@ -238,6 +238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   plantManager: {fileID: 1610813631}
+  mouseController: {fileID: 1887063086}
 --- !u!4 &545539041
 Transform:
   m_ObjectHideFlags: 0

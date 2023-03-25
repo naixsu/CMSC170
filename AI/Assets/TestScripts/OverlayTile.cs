@@ -30,6 +30,9 @@ public class OverlayTile : MonoBehaviour
         }*/
     }
 
+    //
+    // pretty self explanatory stuff here
+    // 
     public void PlantSeed()
     {
         if (!hasSeed)
@@ -49,14 +52,12 @@ public class OverlayTile : MonoBehaviour
     {
         Transform childTransform = transform.GetChild(0);
         childTransform.gameObject.SetActive(true);
-        //gameObject.GetComponentInChildren<GameObject>().SetActive(true);
     }
 
     public void HideHighlightTile()
     {
         Transform childTransform = transform.GetChild(0);
         childTransform.gameObject.SetActive(false);
-        //gameObject.GetComponentInChildren<GameObject>().SetActive(false);
     }
 
     public void HideTile()
@@ -67,14 +68,12 @@ public class OverlayTile : MonoBehaviour
 
     public void TillTile()
     {
-        
         if (!isTilled)
         {
             this.isTilled = true;
             Debug.Log("Tilled tile at " + this.gameObject.transform.position.x + " " + this.gameObject.transform.position.y);
             this.ShowTile(1f);
-        }
-            
+        }     
     }
 
     public void UntillTile()

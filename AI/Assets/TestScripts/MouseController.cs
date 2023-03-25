@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class MouseController : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class MouseController : MonoBehaviour
     public List<OverlayTile> tilledTiles = new List<OverlayTile>();
 
 
+    #region GAME MANAGER
 
     private void Awake()
     {
@@ -36,6 +38,8 @@ public class MouseController : MonoBehaviour
         }
     }
 
+    #endregion
+
     private void Start()
     {
     }
@@ -45,49 +49,78 @@ public class MouseController : MonoBehaviour
     {
         if (mouseControl)
         {
+            // gets a tile's collider on the game window that a raycast hit
             var focusedTileHit = GetFocusedOnTile();
-
+            // if there is a tile from the raycast hit
             if (focusedTileHit.HasValue)
             {
+                // get the gameObject the raycast has hit
                 OverlayTile overlayTile = focusedTileHit.Value.collider.gameObject.GetComponent<OverlayTile>();
-
+                // set this gameObject's position according to the overlayTile's position
+                // this also changes the Cursor sprite's position, which makes it look like
+                // the cursor is selecting other tiles
                 transform.position = overlayTile.transform.position;
+                // adjust this sorting order
                 gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
 
+                #region LEFT CLICK ACTIONS
                 if (Input.GetMouseButtonDown(0))
                 {
                     if (!villagerPlaced)
                     {
                         if (villager == null)
                         {
+                            // if the villager is not placed and there is no villager prefab in the scene,
+                            // instantiate the villager
                             villager = Instantiate(villagerPrefab).GetComponent<VillagerInfo>();
+                            // basically positions the villager's transform.position according to the overlayTile's transform.position
+                            // set the villager's active tile to the overlayTile detected
                             PositionCharacterOnTile(overlayTile);
                             villagerPlaced = true;
                         }
                     }
                     else
                     {
+                        // if a villager is in the screen, can left click to untill a tile (if tilled)
                         overlayTile.UntillTile();
-                        villager.seeds--;
+                        // deduct the villager's seed count accordingly
+                        if (tilledTiles.Count > 0)
+                            villager.seeds--;
+                        // remove tile to the list
+                        tilledTiles.Remove(overlayTile);
                     }
 
                 }
+                #endregion
 
+                #region RIGHT CLICK ACTIONS
                 if (Input.GetMouseButtonDown(1) && villagerPlaced)
                 {
+                    // if a villager is in the scene, can right click to till tiles
                     overlayTile.TillTile();
-                    villager.seeds++;
+                    // add the villager's seed count accordingly
+                    if (tilledTiles.Count <= 0)
+                        villager.seeds++;
+                    // add tilled tiles to the list
                     tilledTiles.Add(overlayTile);
                 }
+                #endregion
             }
 
-            if (Input.GetMouseButtonDown(2) && villagerPlaced && tilledTiles.Count > 0 && !isMoving)
+            #region MIDDLE MOUSE CLICK ACTIONS
+            if (Input.GetMouseButtonDown(2) && villagerPlaced && !isMoving)
             {
-                GameManager.instance.UpdateGameState(GameManager.GameState.PlantSeeds);
+                // updates GameState to PlantSeeds if there are one or more tilled tiles in the screen
+                if (tilledTiles.Count > 0)
+                    GameManager.instance.UpdateGameState(GameManager.GameState.PlantSeeds);
+                else
+                    Debug.Log("No tilled tiles to plant on");
             }
+            #endregion
         }
     }
 
+    // simple raycast function that gets everything the line touches from top to bottom
     public RaycastHit2D? GetFocusedOnTile()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -97,11 +130,13 @@ public class MouseController : MonoBehaviour
 
         if (hits.Length > 0)
         {
+            // returns the topmost component/gameObject/whatever the raycast hits
             return hits.OrderByDescending(i => i.collider.transform.position.z).First();
         }
         return null;
     }
 
+    // comments about this above
     public void PositionCharacterOnTile(OverlayTile tile)
     {
         villager.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z);
