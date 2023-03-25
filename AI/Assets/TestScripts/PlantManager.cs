@@ -41,13 +41,13 @@ public class PlantManager : MonoBehaviour
             plantingState = true;
             mouseController.mouseControl = false;
 
-            villager = mouseController.villager;
+            /*villager = mouseController.villager;
             range = 1;
             pathFinder = new PathFinder();
             rangeFinder = new RangeFinder();
             tilledTiles = mouseController.tilledTiles;
 
-            GetInRangeTiles();
+            GetInRangeTiles();*/
 
         }
 
@@ -59,7 +59,13 @@ public class PlantManager : MonoBehaviour
 
     private void Start()
     {
+        villager = mouseController.villager;
+        range = 1;
+        pathFinder = new PathFinder();
+        rangeFinder = new RangeFinder();
+        tilledTiles = mouseController.tilledTiles;
 
+        GetInRangeTiles();
     }
 
     private void Update()
