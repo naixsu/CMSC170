@@ -70,10 +70,10 @@ public class PlantManager : MonoBehaviour
             CheckMove();
         }
 
-        if (harvestingState)
+        /*if (harvestingState)
         {
             EditorApplication.isPaused = true;
-        }
+        }*/
     }
 
     private void CheckPlant()
