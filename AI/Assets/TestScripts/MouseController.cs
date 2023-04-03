@@ -99,8 +99,12 @@ public class MouseController : MonoBehaviour
                     // if a villager is in the scene, can right click to till tiles
                     overlayTile.TillTile();
                     // add the villager's seed count accordingly
-                    if (tilledTiles.Count <= 0)
+                    if (tilledTiles.Count >= 0)
+                    {
                         villager.seeds++;
+                        Debug.Log("seeds " + villager.seeds);
+                    }
+                        
                     // add tilled tiles to the list
                     tilledTiles.Add(overlayTile);
                 }
