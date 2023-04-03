@@ -18,8 +18,16 @@ public class OverlayTile : MonoBehaviour
 
     [SerializeField] private Sprite overlayTile;
     [SerializeField] private Sprite plantedSprite;
+    [SerializeField] private Sprite growth1;
+    [SerializeField] private Sprite growth2;
+    [SerializeField] private Sprite growth3;
+    [SerializeField] private Sprite growth4;
+
     public bool isTilled;
     public bool hasSeed;
+    public bool isFullGrown;
+    public bool isHarvested;
+    private Coroutine coroutinePlantGrowth;
     
     // Update is called once per frame
     void Update()
@@ -38,9 +46,25 @@ public class OverlayTile : MonoBehaviour
         if (!hasSeed)
         {
             this.hasSeed = true;
+            this.isHarvested = false;
+            this.isFullGrown = false;
             this.GetComponent<SpriteRenderer>().sprite = plantedSprite;
+            coroutinePlantGrowth = StartCoroutine(PlantGrowth());
             Debug.Log("Planted seed at tile " + this.gameObject.transform.position.x + " " + this.gameObject.transform.position.y);
         }
+    }
+
+    public IEnumerator PlantGrowth()
+    {
+        yield return new WaitForSeconds(5f);
+        this.GetComponent<SpriteRenderer>().sprite = growth1;
+        yield return new WaitForSeconds(5f);
+        this.GetComponent<SpriteRenderer>().sprite = growth2;
+        yield return new WaitForSeconds(5f);
+        this.GetComponent<SpriteRenderer>().sprite = growth3;
+        yield return new WaitForSeconds(5f);
+        this.GetComponent<SpriteRenderer>().sprite = growth4;
+        this.isFullGrown = true;
     }
 
     public void ShowTile(float alpha)

@@ -190,8 +190,14 @@ MonoBehaviour:
   gridLocation: {x: 0, y: 0, z: 0}
   overlayTile: {fileID: 21300000, guid: cbf0c72768cd8c04880939c44060c612, type: 3}
   plantedSprite: {fileID: 21300000, guid: 8d8bb141c1b230f41aef08cf8924aa85, type: 3}
+  growth1: {fileID: 21300000, guid: bef30127a12a6224996a9ae65de69863, type: 3}
+  growth2: {fileID: 21300000, guid: 0aa253c44c61ea24e8ca13c9982127ae, type: 3}
+  growth3: {fileID: 21300000, guid: 560607856f1c63a4d908ce50985a2d43, type: 3}
+  growth4: {fileID: 21300000, guid: 67341a91b94dff54dab7b82c6fe936d4, type: 3}
   isTilled: 0
   hasSeed: 0
+  isFullGrown: 0
+  isHarvested: 0
 --- !u!61 &721033159708425052
 BoxCollider2D:
   m_ObjectHideFlags: 0
