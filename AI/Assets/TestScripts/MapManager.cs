@@ -130,10 +130,10 @@ public class MapManager : MonoBehaviour
             neighbors.Add(map[locationToCheck]);
         }
 
-        // down
+        // left
         locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x,
-            currentOverlayTile.gridLocation.y - 1
+            currentOverlayTile.gridLocation.x - 1,
+            currentOverlayTile.gridLocation.y
             );
 
         if (map.ContainsKey(locationToCheck))
@@ -141,10 +141,10 @@ public class MapManager : MonoBehaviour
             neighbors.Add(map[locationToCheck]);
         }
 
-        // left
+        // down
         locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x - 1,
-            currentOverlayTile.gridLocation.y
+            currentOverlayTile.gridLocation.x,
+            currentOverlayTile.gridLocation.y - 1
             );
 
         if (map.ContainsKey(locationToCheck))
