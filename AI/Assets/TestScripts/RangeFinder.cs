@@ -11,7 +11,7 @@ public class RangeFinder
         var inRangeTiles = new List<OverlayTile>();
         // the range of tiles to get tiles in range
         int stepCount = 0;
-
+        inRangeTiles.Add(startingTile);
         var tileForPreviousStep = new List<OverlayTile>();
         tileForPreviousStep.Add(startingTile);
 
