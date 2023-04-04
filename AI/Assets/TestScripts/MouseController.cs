@@ -16,6 +16,7 @@ public class MouseController : MonoBehaviour
     public bool isMoving;
 
     public List<OverlayTile> tilledTiles = new List<OverlayTile>();
+    public List<OverlayTile> toHarvest = new List<OverlayTile>();
 
 
     #region GAME MANAGER
@@ -102,11 +103,13 @@ public class MouseController : MonoBehaviour
                     if (tilledTiles.Count >= 0)
                     {
                         villager.seeds++;
+                        villager.crops++;
                         Debug.Log("seeds " + villager.seeds);
                     }
                         
                     // add tilled tiles to the list
                     tilledTiles.Add(overlayTile);
+                    toHarvest.Add(overlayTile);
                 }
                 #endregion
             }

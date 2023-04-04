@@ -194,6 +194,7 @@ MonoBehaviour:
   growth2: {fileID: 21300000, guid: 0aa253c44c61ea24e8ca13c9982127ae, type: 3}
   growth3: {fileID: 21300000, guid: 560607856f1c63a4d908ce50985a2d43, type: 3}
   growth4: {fileID: 21300000, guid: 67341a91b94dff54dab7b82c6fe936d4, type: 3}
+  harvested: {fileID: 21300000, guid: fae4cbe78b6b896449ae4da01c02b95f, type: 3}
   isTilled: 0
   hasSeed: 0
   isFullGrown: 0

@@ -22,6 +22,7 @@ public class OverlayTile : MonoBehaviour
     [SerializeField] private Sprite growth2;
     [SerializeField] private Sprite growth3;
     [SerializeField] private Sprite growth4;
+    [SerializeField] private Sprite harvested;
 
     public bool isTilled;
     public bool hasSeed;
@@ -54,15 +55,25 @@ public class OverlayTile : MonoBehaviour
         }
     }
 
+    public void HarvestCrop()
+    {
+        if (isFullGrown)
+        {
+            this.GetComponent<SpriteRenderer>().sprite = harvested;
+            this.isHarvested = true;
+            Debug.Log("Harvested crop at tile " + this.gameObject.transform.position.x + " " + this.gameObject.transform.position.y);
+        }
+    }
+
     public IEnumerator PlantGrowth()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         this.GetComponent<SpriteRenderer>().sprite = growth1;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         this.GetComponent<SpriteRenderer>().sprite = growth2;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         this.GetComponent<SpriteRenderer>().sprite = growth3;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         this.GetComponent<SpriteRenderer>().sprite = growth4;
         this.isFullGrown = true;
     }
