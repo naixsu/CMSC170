@@ -185,6 +185,12 @@ public class PlantManager : MonoBehaviour
 
             // pop one tilled tile from the list
             tilledTiles.RemoveAt(0);
+
+            if (tilledTiles.Count > 0) // get new path
+            {
+                Debug.Log("there are still " + tilledTiles.Count + " more tilled tiles");
+                GetInRangeTiles();
+            }
         }
 
         if (tilledTiles.Count > 0 && isMoving)
