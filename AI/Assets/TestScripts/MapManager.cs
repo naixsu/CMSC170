@@ -114,7 +114,7 @@ public class MapManager : MonoBehaviour
     {
         // pathfinding algorithm
 
-        // list of neighboring tiles top, down, left, right
+        // list of neighboring tiles top, down, left, right, topleft, topright, downleft, downright
         List<OverlayTile> neighbors = new List<OverlayTile>();
 
         #region GET NEIGHBORS
@@ -127,7 +127,9 @@ public class MapManager : MonoBehaviour
 
         if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(map[locationToCheck]);
+            OverlayTile neighborTile = map[locationToCheck];
+            if (!neighborTile.isBlocked)
+                neighbors.Add(neighborTile);
         }
 
         // top left
@@ -138,7 +140,9 @@ public class MapManager : MonoBehaviour
 
         if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(map[locationToCheck]);
+            OverlayTile neighborTile = map[locationToCheck];
+            if (!neighborTile.isBlocked)
+                neighbors.Add(neighborTile);
         }
 
         // left
@@ -149,7 +153,9 @@ public class MapManager : MonoBehaviour
 
         if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(map[locationToCheck]);
+            OverlayTile neighborTile = map[locationToCheck];
+            if (!neighborTile.isBlocked)
+                neighbors.Add(neighborTile);
         }
 
         // left down
@@ -160,7 +166,9 @@ public class MapManager : MonoBehaviour
 
         if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(map[locationToCheck]);
+            OverlayTile neighborTile = map[locationToCheck];
+            if (!neighborTile.isBlocked)
+                neighbors.Add(neighborTile);
         }
 
         // down
@@ -171,7 +179,9 @@ public class MapManager : MonoBehaviour
 
         if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(map[locationToCheck]);
+            OverlayTile neighborTile = map[locationToCheck];
+            if (!neighborTile.isBlocked)
+                neighbors.Add(neighborTile);
         }
 
         // down right
@@ -182,7 +192,9 @@ public class MapManager : MonoBehaviour
 
         if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(map[locationToCheck]);
+            OverlayTile neighborTile = map[locationToCheck];
+            if (!neighborTile.isBlocked)
+                neighbors.Add(neighborTile);
         }
 
         // right
@@ -193,7 +205,9 @@ public class MapManager : MonoBehaviour
 
         if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(map[locationToCheck]);
+            OverlayTile neighborTile = map[locationToCheck];
+            if (!neighborTile.isBlocked)
+                neighbors.Add(neighborTile);
         }
 
         // right iop
@@ -204,7 +218,9 @@ public class MapManager : MonoBehaviour
 
         if (map.ContainsKey(locationToCheck))
         {
-            neighbors.Add(map[locationToCheck]);
+            OverlayTile neighborTile = map[locationToCheck];
+            if (!neighborTile.isBlocked)
+                neighbors.Add(neighborTile);
         }
 
         #endregion
