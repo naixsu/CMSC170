@@ -147,7 +147,8 @@ public class PlantManager : MonoBehaviour
         if (tileFound)
         {
             Debug.Log("Stop coroutine");
-            StopCoroutine(coroutine);
+            if (coroutine != null)
+                StopCoroutine(coroutine);
         }
         // if tile is not found still:
         // increase the range in GetTilesInRange(), and
@@ -166,6 +167,24 @@ public class PlantManager : MonoBehaviour
         {
             MoveAlongPath();
             isMoving = true;
+        }
+
+        if (tilledTiles.Count > 0 && tileFound)
+        {
+            // plant seed
+            villager.activeTile.PlantSeed();
+            villager.seeds--;
+            isMoving = false;
+
+            // reset range
+            range = 1;
+
+            // hide highlight range and remove past range
+            HideHighlightRange();
+            RemoveRange();
+
+            // pop one tilled tile from the list
+            tilledTiles.RemoveAt(0);
         }
 
         if (tilledTiles.Count > 0 && isMoving)

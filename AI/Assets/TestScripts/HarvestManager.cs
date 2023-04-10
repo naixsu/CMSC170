@@ -23,6 +23,7 @@ public class HarvestManager : MonoBehaviour
 
     public bool canPatrol;
     public bool patrolling;
+    public int patrolRange;
 
      
     public List<OverlayTile> path = new List<OverlayTile>();
@@ -75,12 +76,6 @@ public class HarvestManager : MonoBehaviour
     {
         if (harvestingState)
         {
-            /*if (!canPatrol && !isMoving) 
-            {
-                int rng = Random.Range(0, 1_000);
-
-                canPatrol = (rng == 1);
-            }*/
             CheckHarvest();
             CheckMove();
         }
@@ -90,6 +85,8 @@ public class HarvestManager : MonoBehaviour
             StopCoroutine(coroutine);
             harvestingState = false;
             OverlayTile randomTile = GetRandomTile();
+            if (randomTile == villager.activeTile)
+                return;
             path = pathFinder.FindPath(villager.activeTile, randomTile);
             
             canPatrol = false;
@@ -114,7 +111,8 @@ public class HarvestManager : MonoBehaviour
 
     private OverlayTile GetRandomTile()
     {
-        List<OverlayTile> randomNeighbors = MapManager.Instance.GetNeighborTiles(villager.activeTile);
+        // List<OverlayTile> randomNeighbors = MapManager.Instance.GetNeighborTiles(villager.activeTile);
+        List<OverlayTile> randomNeighbors = inRangeTiles;
         OverlayTile randomTile = randomNeighbors[Random.Range(0, randomNeighbors.Count)];
         return randomTile;
     }
@@ -165,18 +163,19 @@ public class HarvestManager : MonoBehaviour
         }
     }
 
-    private void GetInRangeTiles()
+    private void CanPatrol()
     {
-        // Patrol
         if (!canPatrol && !isMoving && !tileFound)
         {
-            
-            int rng = Random.Range(0, 10);
+            int rng = Random.Range(0, patrolRange);
             Debug.Log("Try Patrol " + rng);
 
+            // canPatrol is 1 in patrolRange chance
             canPatrol = (rng == 1);
         }
-
+    }
+    private void GetInRangeTiles()
+    {
         tileFound = false;
         // hides the Highlight gameObject under the overlayTile gameObject
         HideHighlightRange();
@@ -193,7 +192,9 @@ public class HarvestManager : MonoBehaviour
         if (tileFound)
         {
             Debug.Log("Stop coroutine");
-            StopCoroutine(coroutine);
+            if (coroutine != null)
+                StopCoroutine(coroutine);
+            
         }
         // if tile is not found still:
         // increase the range in GetTilesInRange(), and
@@ -201,6 +202,8 @@ public class HarvestManager : MonoBehaviour
         else if (!tileFound && !isMoving)
         {
             coroutine = StartCoroutine(AddRange());
+            // Patrol
+            CanPatrol();
         }
     }
 
@@ -248,6 +251,26 @@ public class HarvestManager : MonoBehaviour
         {
             MoveAlongPath();
             isMoving = true;
+        }
+
+        if (grownTiles.Count > 0 && tileFound)
+        {
+            canPatrol = false;
+            // harvest crop
+            villager.activeTile.HarvestCrop();
+            villager.crops--;
+            isMoving = false;
+
+            // reset range
+            range = 1;
+
+            // hide highlight range and remove past range
+            HideHighlightRange();
+            RemoveRange();
+
+            // pop one tilled tile from the list
+
+            grownTiles.RemoveAt(0);
         }
 
         if (grownTiles.Count > 0 && isMoving)
