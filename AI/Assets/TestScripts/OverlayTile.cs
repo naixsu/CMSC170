@@ -7,7 +7,8 @@ public class OverlayTile : MonoBehaviour
     #region PATHFINDING VARS
     public int _G;
     public int _H;
-    public int _F { get { return _G + _H; } }
+    public int _F;
+    // public int _F { get { return _G + _H; } }
     public bool isBlocked;
     public OverlayTile previous;
 
@@ -37,6 +38,11 @@ public class OverlayTile : MonoBehaviour
         {
             HideTile();
         }*/
+    }
+
+    public void CalculateFCost()
+    {
+        _F = _G + _H;
     }
 
     //
