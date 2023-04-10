@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class MouseController : MonoBehaviour
 {
@@ -14,10 +15,11 @@ public class MouseController : MonoBehaviour
     public bool mouseControl;
     public bool villagerPlaced = false;
     public bool isMoving;
-
+    public bool villagerButtonClicked = false;
+    public bool hoeButtonClicked = false;
+    public bool pickaxeButtonClicked = false;
     public List<OverlayTile> tilledTiles = new List<OverlayTile>();
-    public List<OverlayTile> toHarvest = new List<OverlayTile>();
-
+    
 
     #region GAME MANAGER
 
@@ -46,6 +48,38 @@ public class MouseController : MonoBehaviour
     }
 
     // Update is called once per frame
+    public void villagerButton()
+    {
+        villagerButtonClicked = !villagerButtonClicked;
+        hoeButtonClicked = false;
+        pickaxeButtonClicked = false;
+    }
+    public void pickaxeButton()
+    {
+        pickaxeButtonClicked = !pickaxeButtonClicked;
+        villagerButtonClicked = false;
+        hoeButtonClicked = false;
+    }
+    public void hoeButton()
+    {
+        hoeButtonClicked = !hoeButtonClicked;
+        villagerButtonClicked = false;
+        pickaxeButtonClicked = false;
+    }
+    public void spawnSeedsButton()
+    {
+        if (villagerPlaced && !isMoving)
+            {
+                // updates GameState to PlantSeeds if there are one or more tilled tiles in the screen
+                if (tilledTiles.Count > 0)
+                    GameManager.instance.UpdateGameState(GameManager.GameState.PlantSeeds);
+                else
+                    Debug.Log("No tilled tiles to plant on");
+            }
+        villagerButtonClicked = false;
+        pickaxeButtonClicked = false;
+        hoeButtonClicked = false;
+    }
     void Update()
     {
         if (mouseControl)
@@ -64,8 +98,8 @@ public class MouseController : MonoBehaviour
                 // adjust this sorting order
                 gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
 
-                #region LEFT CLICK ACTIONS
-                if (Input.GetMouseButtonDown(0))
+                #region VILLAGER BUTTON PRESS
+                if (Input.GetMouseButtonDown(0) && villagerButtonClicked)
                 {
                     if (!villagerPlaced)
                     {
@@ -78,7 +112,28 @@ public class MouseController : MonoBehaviour
                             // set the villager's active tile to the overlayTile detected
                             PositionCharacterOnTile(overlayTile);
                             villagerPlaced = true;
+                            villagerButtonClicked = false;
                         }
+                    }
+
+                }
+                #endregion
+
+                #region HOE BUTTON PRESS
+                if (Input.GetMouseButtonDown(0) && hoeButtonClicked && villagerPlaced)
+                {
+                    if(overlayTile.isTilled == false)
+                    {
+                        // if a villager is in the scene, can right click to till tiles
+                        overlayTile.TillTile();
+                        // add the villager's seed count accordingly
+                        if (tilledTiles.Count >= 0)
+                        {
+                            villager.seeds++;
+                            Debug.Log("seeds " + villager.seeds);
+                        }
+                        // add tilled tiles to the list
+                        tilledTiles.Add(overlayTile);
                     }
                     else
                     {
@@ -90,41 +145,12 @@ public class MouseController : MonoBehaviour
                         // remove tile to the list
                         tilledTiles.Remove(overlayTile);
                     }
-
-                }
-                #endregion
-
-                #region RIGHT CLICK ACTIONS
-                if (Input.GetMouseButtonDown(1) && villagerPlaced)
-                {
-                    // if a villager is in the scene, can right click to till tiles
-                    overlayTile.TillTile();
-                    // add the villager's seed count accordingly
-                    if (tilledTiles.Count >= 0)
-                    {
-                        villager.seeds++;
-                        villager.crops++;
-                        Debug.Log("seeds " + villager.seeds);
-                    }
-                        
-                    // add tilled tiles to the list
-                    tilledTiles.Add(overlayTile);
-                    toHarvest.Add(overlayTile);
+                    seedCountScript.seedCountVal = villager.seeds;
                 }
                 #endregion
             }
-
-            #region MIDDLE MOUSE CLICK ACTIONS
-            if (Input.GetMouseButtonDown(2) && villagerPlaced && !isMoving)
-            {
-                // updates GameState to PlantSeeds if there are one or more tilled tiles in the screen
-                if (tilledTiles.Count > 0)
-                    GameManager.instance.UpdateGameState(GameManager.GameState.PlantSeeds);
-                else
-                    Debug.Log("No tilled tiles to plant on");
-            }
-            #endregion
         }
+
     }
 
     // simple raycast function that gets everything the line touches from top to bottom
