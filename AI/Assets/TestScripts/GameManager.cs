@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static event Action<GameState> OnStateChange;
     [SerializeField] private PlantManager plantManager;
     [SerializeField] private MouseController mouseController;
+    [SerializeField] private HarvestManager harvestManager;
 
     private void Awake()
     {
@@ -73,6 +74,8 @@ public class GameManager : MonoBehaviour
     private void HandleHarvestSeeds()
     {
         Debug.Log("GM: Harvesting Seeds");
+        harvestManager.gameObject.SetActive(true);
+        plantManager.gameObject.SetActive(false);
     }
 
     public enum GameState

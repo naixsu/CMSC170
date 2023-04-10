@@ -4,7 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class PlantManager : MonoBehaviour
+public class HarvestManager : MonoBehaviour
 {
     public MouseController mouseController;
     private VillagerInfo villager;
@@ -20,8 +20,9 @@ public class PlantManager : MonoBehaviour
     public bool isMoving;
     public bool tileFound;
 
+     
     public List<OverlayTile> path = new List<OverlayTile>();
-    public List<OverlayTile> tilledTiles = new List<OverlayTile>();
+    public List<OverlayTile> grownTiles = new List<OverlayTile>();
     public List<OverlayTile> inRangeTiles = new List<OverlayTile>();
 
     #region GAME MANAGER
@@ -56,7 +57,7 @@ public class PlantManager : MonoBehaviour
         range = 0;
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
-        tilledTiles = mouseController.tilledTiles;
+        grownTiles = mouseController.toHarvest;
 
         // start range detection
         GetInRangeTiles();
@@ -64,23 +65,11 @@ public class PlantManager : MonoBehaviour
 
     private void Update()
     {
-        if (plantingState)
+        if (harvestingState)
         {
-            CheckPlant();
             CheckMove();
         }
 
-    }
-
-    private void CheckPlant()
-    {
-        // updates the GameState to HarvestSeeds if all tilled tiles have been planted a seed
-        if (mouseController.villagerPlaced && villager.seeds == 0 && plantingState)
-        {
-            plantingState = false;
-            Debug.Log("All seeds have been planted");
-            GameManager.instance.UpdateGameState(GameManager.GameState.HarvestSeeds);
-        }
     }
 
     private IEnumerator AddRange()
@@ -89,7 +78,7 @@ public class PlantManager : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
 
         // try and detect more tilled tiles by increasing the range in GetInRangeTiles()
-        if (mouseController.tilledTiles.Count > 0 && !isMoving)
+        if (mouseController.toHarvest.Count > 0 && !isMoving)
         {
             range++;
             GetInRangeTiles();
@@ -111,7 +100,7 @@ public class PlantManager : MonoBehaviour
 
             // generate the path using A* when a tile has been detected and
             // it is tilled and has no seed in it
-            if (tile.isTilled && !tile.hasSeed)
+            if (tile.isFullGrown && !tile.isHarvested)
             {
                 tileFound = true;
                 path = pathFinder.FindPath(villager.activeTile, tile);
@@ -168,14 +157,14 @@ public class PlantManager : MonoBehaviour
             isMoving = true;
         }
 
-        if (tilledTiles.Count > 0 && isMoving)
+        if (grownTiles.Count > 0 && isMoving)
         {
             // if end tile is reached
             if (path.Count == 0)
             {
-                // plant seed
-                villager.activeTile.PlantSeed();
-                villager.seeds--;
+                // harvest crop
+                villager.activeTile.HarvestCrop();
+                villager.crops--;
                 isMoving = false;
 
                 // reset range
@@ -186,10 +175,10 @@ public class PlantManager : MonoBehaviour
                 RemoveRange();
 
                 // pop one tilled tile from the list
-                tilledTiles.RemoveAt(0);
-                if (tilledTiles.Count > 0) // get new path
+                grownTiles.RemoveAt(0);
+                if (grownTiles.Count > 0) // get new path
                 {
-                    Debug.Log("there are still " + tilledTiles.Count + " more tilled tiles");
+                    Debug.Log("there are still " + grownTiles.Count + " more crops");
                     GetInRangeTiles();
                 }
             }
