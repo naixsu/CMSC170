@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PathFinder
+public class NewPathFinder
 {
-    
-    // https://en.wikipedia.org/wiki/A*_search_algorithm for more reference
+    private const int MOVE_STRAIGHT_COST = 10;
+    private const int MOVE_DIAGONAL_COST = 14;
+
     public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end)
     {
-        Debug.Log("Pathfinder");
+        Debug.Log("newPathfinder");
         // list of OverlayTiles
         List<OverlayTile> openList = new List<OverlayTile>();
         List<OverlayTile> closedList = new List<OverlayTile>();
 
-        // reference the map
         Dictionary<Vector2Int, OverlayTile> map = MapManager.Instance.map;
+
+        // https://en.wikipedia.org/wiki/A*_search_algorithm for more reference
         // add start tile to openList
         openList.Add(start);
-
 
         // initialize each tile
         foreach (OverlayTile tile in map.Values)
@@ -33,8 +34,10 @@ public class PathFinder
         start._H = GetDiagonalDistance(start, end);
         start.CalculateFCost();
 
-        while (openList.Count > 0)
+        while (openList.Count > 0) 
         {
+            // OverlayTile currentOverlayTile = GetLowestFCostNode(openList);
+
             // gets the first tile with the lowest F value
             OverlayTile currentOverlayTile = openList.OrderBy(x => x._F).First();
 
@@ -49,40 +52,36 @@ public class PathFinder
                 return GetFinishedList(start, end);
             }
 
+/*            if (currentOverlayTile == end)
+            {
+                // reach final node
+                return GetFinishedList(start, end);
+            }
+
+            openList.Remove(currentOverlayTile);
+            closedList.Add(currentOverlayTile);*/
+
             // neighboring tiles
             var neighborTiles = MapManager.Instance.GetNeighborTiles(currentOverlayTile);
 
-            foreach (var neighbor in neighborTiles)
+            foreach (var neighborTile in neighborTiles)
             {
-                // check valid neighbors
-                // don't allow player to move if a neighbor is invalid
-                if (neighbor.isBlocked || closedList.Contains(neighbor))
+                if (neighborTile.isBlocked || closedList.Contains(neighborTile))
                 {
                     continue;
                 }
 
-                // calculate the tentative G cost
-                int tentativeGCost = currentOverlayTile._G + GetDiagonalDistance(currentOverlayTile, neighbor);
-
-                // check for a faster path from neighbors
-                if (tentativeGCost < neighbor._G)
+                int tentativeGCost = currentOverlayTile._G + GetDiagonalDistance(currentOverlayTile, neighborTile);
+                if (tentativeGCost < neighborTile._G)
                 {
-                    // neighbor's previous tile will be the currentOverlayTile
-                    // aka where we're standing on is the previous tiles for those eight (8) neighbors
-                    neighbor.previous = currentOverlayTile;
-                    // update the G cost
-                    neighbor._G = tentativeGCost;
-                    // update the H cost
-                    neighbor._H = GetDiagonalDistance(neighbor, end);
-                    // update the F cost
-                    neighbor.CalculateFCost();
-
-                    // if a neighbor is not in an open list,
-                    // aka a list where we consider as a valid path, then
-                    // add neighbor to open list
-                    if (!openList.Contains(neighbor))
+                    neighborTile.previous = currentOverlayTile;
+                    neighborTile._G = tentativeGCost;
+                    neighborTile._H = GetDiagonalDistance(neighborTile, end);
+                    neighborTile.CalculateFCost();
+                    
+                    if (!openList.Contains(neighborTile))
                     {
-                        openList.Add(neighbor);
+                        openList.Add(neighborTile);
                     }
                 }
             }
@@ -118,11 +117,7 @@ public class PathFinder
         return finishedList;
     }
 
-    private int GetManhattanDistance(OverlayTile start, OverlayTile neighbor)
-    {
-        // https://en.wikipedia.org/wiki/Taxicab_geometry for more reference
-        return Mathf.Abs(start.gridLocation.x - neighbor.gridLocation.x) + Mathf.Abs(start.gridLocation.y - neighbor.gridLocation.y);
-    }
+
 
     private int GetDiagonalDistance(OverlayTile start, OverlayTile neighbor)
     {
@@ -130,6 +125,19 @@ public class PathFinder
         int dy = Mathf.Abs(start.gridLocation.y - neighbor.gridLocation.y);
         int diagonalSteps = Mathf.Min(dx, dy);
         int straightSteps = Mathf.Abs(dx - dy);
-        return diagonalSteps * 14 + straightSteps * 10;
+        return diagonalSteps * MOVE_DIAGONAL_COST + straightSteps * MOVE_STRAIGHT_COST;
+    }
+
+    private OverlayTile GetLowestFCostNode(List<OverlayTile> pathNodeList)
+    {
+        OverlayTile lowestFCostNode = pathNodeList[0];
+
+        for (int i = 1; i < pathNodeList.Count; i++)
+        {
+            if (pathNodeList[i]._F < lowestFCostNode._F)
+                lowestFCostNode = pathNodeList[i];
+        }
+
+        return lowestFCostNode;
     }
 }

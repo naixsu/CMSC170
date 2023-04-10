@@ -49,7 +49,7 @@ public class MapManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     private void SetUp()
@@ -130,10 +130,32 @@ public class MapManager : MonoBehaviour
             neighbors.Add(map[locationToCheck]);
         }
 
+        // top left
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x - 1,
+            currentOverlayTile.gridLocation.y + 1
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            neighbors.Add(map[locationToCheck]);
+        }
+
         // left
         locationToCheck = new Vector2Int(
             currentOverlayTile.gridLocation.x - 1,
             currentOverlayTile.gridLocation.y
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            neighbors.Add(map[locationToCheck]);
+        }
+
+        // left down
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x - 1,
+            currentOverlayTile.gridLocation.y - 1
             );
 
         if (map.ContainsKey(locationToCheck))
@@ -152,10 +174,32 @@ public class MapManager : MonoBehaviour
             neighbors.Add(map[locationToCheck]);
         }
 
+        // down right
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x + 1,
+            currentOverlayTile.gridLocation.y - 1
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            neighbors.Add(map[locationToCheck]);
+        }
+
         // right
         locationToCheck = new Vector2Int(
             currentOverlayTile.gridLocation.x + 1,
             currentOverlayTile.gridLocation.y
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            neighbors.Add(map[locationToCheck]);
+        }
+
+        // right iop
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x + 1,
+            currentOverlayTile.gridLocation.y + 1
             );
 
         if (map.ContainsKey(locationToCheck))
