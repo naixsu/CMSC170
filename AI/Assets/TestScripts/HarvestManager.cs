@@ -253,7 +253,7 @@ public class HarvestManager : MonoBehaviour
             isMoving = true;
         }
 
-        if (grownTiles.Count > 0 && tileFound)
+        if (grownTiles.Count > 0 && tileFound && villager.activeTile.isFullGrown && !villager.activeTile.isHarvested)
         {
             canPatrol = false;
             // harvest crop

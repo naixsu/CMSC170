@@ -169,7 +169,7 @@ public class PlantManager : MonoBehaviour
             isMoving = true;
         }
 
-        if (tilledTiles.Count > 0 && tileFound)
+        if (tilledTiles.Count > 0 && tileFound && villager.activeTile.isTilled && !villager.activeTile.hasSeed)
         {
             // plant seed
             villager.activeTile.PlantSeed();
