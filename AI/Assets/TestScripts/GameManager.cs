@@ -47,6 +47,9 @@ public class GameManager : MonoBehaviour
             case GameState.HarvestSeeds:
                 HandleHarvestSeeds();
                 break;
+            case GameState.GameOver:
+                HandleGameOver();
+                break;
         }
 
         OnStateChange?.Invoke(newState);
@@ -78,11 +81,19 @@ public class GameManager : MonoBehaviour
         plantManager.gameObject.SetActive(false);
     }
 
+    private void HandleGameOver()
+    {
+        Debug.Log("GM: Game Over");
+        harvestManager.gameObject.SetActive(false);
+        plantManager.gameObject.SetActive(false);
+    }
+
     public enum GameState
 {
     SetUp,
     MouseControl,
     PlantSeeds,
-    HarvestSeeds
+    HarvestSeeds,
+    GameOver,
 }
 }

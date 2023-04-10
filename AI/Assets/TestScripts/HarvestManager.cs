@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,10 +21,16 @@ public class HarvestManager : MonoBehaviour
     public bool isMoving;
     public bool tileFound;
 
+    public bool canPatrol;
+    public bool patrolling;
+    public int patrolRange;
+
      
     public List<OverlayTile> path = new List<OverlayTile>();
     public List<OverlayTile> grownTiles = new List<OverlayTile>();
     public List<OverlayTile> inRangeTiles = new List<OverlayTile>();
+
+    public Dictionary<Vector2Int, OverlayTile> map;
 
     #region GAME MANAGER
     private void Awake()
@@ -58,6 +65,8 @@ public class HarvestManager : MonoBehaviour
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
         grownTiles = mouseController.toHarvest;
+        map = MapManager.Instance.map;
+
 
         // start range detection
         GetInRangeTiles();
@@ -67,9 +76,45 @@ public class HarvestManager : MonoBehaviour
     {
         if (harvestingState)
         {
+            CheckHarvest();
             CheckMove();
         }
 
+        if (canPatrol)
+        {
+            StopCoroutine(coroutine);
+            harvestingState = false;
+            OverlayTile randomTile = GetRandomTile();
+            if (randomTile == villager.activeTile)
+                return;
+            path = pathFinder.FindPath(villager.activeTile, randomTile);
+            
+            canPatrol = false;
+            patrolling = true;
+        }
+
+        if (patrolling)
+            Patrol();
+
+    }
+
+    private void CheckHarvest()
+    {
+        // updates the GameState to HarvestSeeds if all tilled tiles have been planted a seed
+        if (mouseController.villagerPlaced && grownTiles.Count == 0 && harvestingState)
+        {
+            harvestingState = false;
+            Debug.Log("All seeds have been harvested");
+            GameManager.instance.UpdateGameState(GameManager.GameState.GameOver);
+        }
+    }
+
+    private OverlayTile GetRandomTile()
+    {
+        // List<OverlayTile> randomNeighbors = MapManager.Instance.GetNeighborTiles(villager.activeTile);
+        List<OverlayTile> randomNeighbors = inRangeTiles;
+        OverlayTile randomTile = randomNeighbors[Random.Range(0, randomNeighbors.Count)];
+        return randomTile;
     }
 
     private IEnumerator AddRange()
@@ -118,6 +163,17 @@ public class HarvestManager : MonoBehaviour
         }
     }
 
+    private void CanPatrol()
+    {
+        if (!canPatrol && !isMoving && !tileFound)
+        {
+            int rng = Random.Range(0, patrolRange);
+            Debug.Log("Try Patrol " + rng);
+
+            // canPatrol is 1 in patrolRange chance
+            canPatrol = (rng == 1);
+        }
+    }
     private void GetInRangeTiles()
     {
         tileFound = false;
@@ -136,7 +192,9 @@ public class HarvestManager : MonoBehaviour
         if (tileFound)
         {
             Debug.Log("Stop coroutine");
-            StopCoroutine(coroutine);
+            if (coroutine != null)
+                StopCoroutine(coroutine);
+            
         }
         // if tile is not found still:
         // increase the range in GetTilesInRange(), and
@@ -144,6 +202,44 @@ public class HarvestManager : MonoBehaviour
         else if (!tileFound && !isMoving)
         {
             coroutine = StartCoroutine(AddRange());
+            // Patrol
+            CanPatrol();
+        }
+    }
+
+    private void Patrol()
+    {
+        // if the there is still a path from the pathfinding algo,
+        // move towards the end tile
+        if (path.Count > 0)
+        {
+            MoveAlongPath();
+            isMoving = true;
+        }
+
+        if (grownTiles.Count > 0 && isMoving && patrolling)
+        {
+            // if end tile is reached
+            if (path.Count == 0)
+            {
+                canPatrol = false;
+                patrolling = false;
+                isMoving = false;
+
+                // reset range
+                range = 1;
+
+                // hide highlight range and remove past range
+                HideHighlightRange();
+                RemoveRange();
+
+                if (grownTiles.Count > 0) // get new path
+                {
+                    harvestingState = true;
+                    Debug.Log("there are still " + grownTiles.Count + " more crops");
+                    GetInRangeTiles();
+                }
+            }
         }
     }
 
@@ -157,11 +253,32 @@ public class HarvestManager : MonoBehaviour
             isMoving = true;
         }
 
+        if (grownTiles.Count > 0 && tileFound)
+        {
+            canPatrol = false;
+            // harvest crop
+            villager.activeTile.HarvestCrop();
+            villager.crops--;
+            isMoving = false;
+
+            // reset range
+            range = 1;
+
+            // hide highlight range and remove past range
+            HideHighlightRange();
+            RemoveRange();
+
+            // pop one tilled tile from the list
+
+            grownTiles.RemoveAt(0);
+        }
+
         if (grownTiles.Count > 0 && isMoving)
         {
             // if end tile is reached
             if (path.Count == 0)
             {
+                canPatrol = false;
                 // harvest crop
                 villager.activeTile.HarvestCrop();
                 villager.crops--;
@@ -175,6 +292,7 @@ public class HarvestManager : MonoBehaviour
                 RemoveRange();
 
                 // pop one tilled tile from the list
+
                 grownTiles.RemoveAt(0);
                 if (grownTiles.Count > 0) // get new path
                 {
