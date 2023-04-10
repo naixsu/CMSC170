@@ -253,7 +253,7 @@ public class HarvestManager : MonoBehaviour
             isMoving = true;
         }
 
-        if (grownTiles.Count > 0 && tileFound && villager.activeTile.isFullGrown && !villager.activeTile.isHarvested)
+        if (grownTiles.Count > 0 && tileFound)
         {
             canPatrol = false;
             // harvest crop
@@ -271,12 +271,6 @@ public class HarvestManager : MonoBehaviour
             // pop one tilled tile from the list
 
             grownTiles.RemoveAt(0);
-
-            if (grownTiles.Count > 0) // get new path
-            {
-                Debug.Log("there are still " + grownTiles.Count + " more crops");
-                GetInRangeTiles();
-            }
         }
 
         if (grownTiles.Count > 0 && isMoving)
