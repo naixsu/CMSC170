@@ -13,7 +13,8 @@ public class MapManager : MonoBehaviour
     public GameObject overlayContainer;
 
     public Dictionary<Vector2Int, OverlayTile> map;
-    [SerializeField] private Transform _camera;
+    [SerializeField] private Camera _camera;
+    [SerializeField] private float _padding = 1f;
 
 
     #region GAME MANAGER
@@ -96,7 +97,7 @@ public class MapManager : MonoBehaviour
 
         // try to center camera based on the tilemap's bounds
         // need to make this function perfect
-        CenterCamera(bounds);
+        ResizeCameraToTilemap(tileMap);
 
 
         // switch GameState once setup is finished
@@ -104,11 +105,29 @@ public class MapManager : MonoBehaviour
         GameManager.instance.UpdateGameState(GameManager.GameState.MouseControl);
     }
 
-    private void CenterCamera(BoundsInt bounds)
+
+    private void ResizeCameraToTilemap(Tilemap tilemap)
     {
-        Vector3 center = bounds.center - new Vector3(0.5f, 0.5f, 0);
-        _camera.transform.position = new Vector3(center.x, bounds.center.y, -10);
+        BoundsInt bounds = tilemap.cellBounds;
+        Vector3Int minTilePosition = bounds.min;
+        Vector3Int maxTilePosition = bounds.max;
+
+        // Get the position of the corners of the tilemap in world space
+        Vector3 bottomLeftCorner = tilemap.CellToWorld(minTilePosition) + new Vector3(0.5f, 0.5f, 0f);
+        Vector3 topRightCorner = tilemap.CellToWorld(maxTilePosition) - new Vector3(0.5f, 0.5f, 0f);
+
+        // Calculate the camera's new position and size
+        Vector3 cameraPosition = (bottomLeftCorner + topRightCorner) / 2f;
+        float cameraSize = Mathf.Max((topRightCorner.y - bottomLeftCorner.y) / 2f, (topRightCorner.x - bottomLeftCorner.x) / 2f / _camera.aspect) + _padding;
+
+        // Set the camera's position and size
+        _camera.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, _camera.transform.position.z);
+        _camera.orthographicSize = cameraSize;
     }
+
+
+
+
 
     public List<OverlayTile> GetNeighborTiles(OverlayTile currentOverlayTile)
     {

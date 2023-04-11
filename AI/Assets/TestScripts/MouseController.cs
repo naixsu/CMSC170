@@ -158,22 +158,27 @@ public class MouseController : MonoBehaviour
                     {
                         // if a tilled tile is selected, untill that tile and replace with obstacle
                         overlayTile.UntillTile();
+                        overlayTile.BlockTile();
                         // deduct the villager's seed count accordingly
                         if (tilledTiles.Count > 0)
                             villager.seeds--;
                         // remove tile to the list
                         tilledTiles.Remove(overlayTile);
                         toHarvest.Remove(overlayTile);
-                        overlayTile.isBlocked = true;
+                        // overlayTile.isBlocked = true;
                     }
                     else if(overlayTile.isBlocked == true)
                     {
                         // place obstacle on tile
-                        overlayTile.isBlocked = false;
+                        Debug.Log("here");
+                        overlayTile.UnblockTile();
+                        // overlayTile.isBlocked = false;
                     }
                     else
                     {
-                        overlayTile.isBlocked = true;
+                        Debug.Log("here here");
+                        overlayTile.BlockTile();
+                        // overlayTile.isBlocked = true;
                     }
                 }
             #endregion

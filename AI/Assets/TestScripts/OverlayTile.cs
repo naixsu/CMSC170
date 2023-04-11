@@ -19,6 +19,8 @@ public class OverlayTile : MonoBehaviour
 
     [SerializeField] private Sprite overlayTile;
     [SerializeField] private Sprite plantedSprite;
+    [SerializeField] private Sprite blocked;
+    [SerializeField] private Sprite grass;
     [SerializeField] private Sprite growth1;
     [SerializeField] private Sprite growth2;
     [SerializeField] private Sprite growth3;
@@ -115,6 +117,27 @@ public class OverlayTile : MonoBehaviour
             Debug.Log("Tilled tile at " + this.gameObject.transform.position.x + " " + this.gameObject.transform.position.y);
             this.ShowTile(1f);
         }     
+    }
+
+    public void BlockTile()
+    {
+        if (!isBlocked)
+        {
+            this.isBlocked = true;
+            Debug.Log("Blocked tile at " + this.gameObject.transform.position.x + " " + this.gameObject.transform.position.y);
+            this.GetComponent<SpriteRenderer>().sprite = blocked;
+            this.ShowTile(1f);
+        }
+    }
+
+    public void UnblockTile()
+    {
+        if (isBlocked)
+        {
+            this.isBlocked = false;
+            Debug.Log("Unblocked tile at " + this.gameObject.transform.position.x + " " + this.gameObject.transform.position.y);
+            this.GetComponent<SpriteRenderer>().sprite = grass;
+        }
     }
 
     public void UntillTile()
