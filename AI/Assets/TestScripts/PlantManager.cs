@@ -85,6 +85,7 @@ public class PlantManager : MonoBehaviour
 
     private IEnumerator AddRange()
     {
+        Debug.Log("Add range");
         // wait for waitTime seconds to perform the functions below
         yield return new WaitForSeconds(waitTime);
 
@@ -161,6 +162,14 @@ public class PlantManager : MonoBehaviour
 
     private void CheckMove()
     {
+        if (tileFound && path == null)
+        {
+            Debug.Log("No possible path found");
+            HideHighlightRange();
+            RemoveRange();
+            GameManager.instance.UpdateGameState(GameManager.GameState.GameOver);
+            return;
+        }
         // if the there is still a path from the pathfinding algo,
         // move towards the end tile
         if (path.Count > 0)

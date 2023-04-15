@@ -26,7 +26,7 @@ public class RangeFinder
 
             foreach ( var neighborTile in tileForPreviousStep)
             {
-                neighborTiles.AddRange(MapManager.Instance.TryGetNeighborTiles(neighborTile));
+                neighborTiles.AddRange(MapManager.Instance.GetNeighborTiles(neighborTile));
             }
 
             inRangeTiles.AddRange(neighborTiles);

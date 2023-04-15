@@ -128,6 +128,8 @@ public class MapManager : MonoBehaviour
 
     public List<OverlayTile> TryGetNeighborTiles(OverlayTile overlayTile)
     {
+        Debug.Log("TryGetNeighborTiles");
+
         List<OverlayTile> neighborTiles = new List<OverlayTile>();
 
         // get coordinates of current tile
@@ -166,7 +168,7 @@ public class MapManager : MonoBehaviour
 
     public List<OverlayTile> GetNeighborTiles(OverlayTile currentOverlayTile)
     {
-        // pathfinding algorithm
+        Debug.Log("GetNeighborTiles");
 
         // list of neighboring tiles top, down, left, right, topleft, topright, downleft, downright
         List<OverlayTile> neighbors = new List<OverlayTile>();
