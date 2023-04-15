@@ -89,6 +89,7 @@ public class MouseController : MonoBehaviour
             // if there is a tile from the raycast hit
             if (focusedTileHit.HasValue)
             {
+                gameObject.GetComponent<SpriteRenderer>().enabled = true;
                 // get the gameObject the raycast has hit
                 OverlayTile overlayTile = focusedTileHit.Value.collider.gameObject.GetComponent<OverlayTile>();
                 // set this gameObject's position according to the overlayTile's position
@@ -112,8 +113,13 @@ public class MouseController : MonoBehaviour
                             // set the villager's active tile to the overlayTile detected
                             PositionCharacterOnTile(overlayTile);
                             villagerPlaced = true;
-                            villagerButtonClicked = false;
+                            //villagerButtonClicked = false;
                         }
+                    }
+                    if (villagerPlaced)
+                    {
+                        PositionCharacterOnTile(overlayTile);
+                        villagerPlaced = true;
                     }
 
                 }
@@ -182,6 +188,10 @@ public class MouseController : MonoBehaviour
                     }
                 }
             #endregion
+            }
+            else
+            {
+                gameObject.GetComponent<SpriteRenderer>().enabled = false;
             }
             
         }
