@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlantManager plantManager;
     [SerializeField] private MouseController mouseController;
     [SerializeField] private HarvestManager harvestManager;
+    [SerializeField] private GameObject buttons;
 
     private void Awake()
     {
@@ -70,6 +71,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GM: Planting Seeds");
         mouseController.gameObject.SetActive(false);
+        buttons.SetActive(false);
         plantManager.gameObject.SetActive(true);
 
     }

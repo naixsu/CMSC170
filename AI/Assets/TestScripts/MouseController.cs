@@ -12,12 +12,26 @@ public class MouseController : MonoBehaviour
     public GameObject villagerPrefab;
     public VillagerInfo villager;
 
+    public int seeds;
     public bool mouseControl;
     public bool villagerPlaced = false;
     public bool isMoving;
+
     public bool villagerButtonClicked = false;
+    [SerializeField] private GameObject _villagerButton;
+    [SerializeField] private Sprite defaultVillager;
+    [SerializeField] private Sprite villagerSelected;
+
     public bool hoeButtonClicked = false;
+    [SerializeField] private GameObject _hoeButton;
+    [SerializeField] private Sprite defaultHoe;
+    [SerializeField] private Sprite hoeSelected;
+
     public bool pickaxeButtonClicked = false;
+    [SerializeField] private GameObject _pickaxeButton;
+    [SerializeField] private Sprite defaultPickaxe;
+    [SerializeField] private Sprite pickaxeSelected;
+
     public List<OverlayTile> tilledTiles = new List<OverlayTile>();
     public List<OverlayTile> toHarvest = new List<OverlayTile>();
 
@@ -45,6 +59,7 @@ public class MouseController : MonoBehaviour
 
     private void Start()
     {
+        seeds = 0;
     }
 
     // Update is called once per frame
@@ -82,6 +97,14 @@ public class MouseController : MonoBehaviour
     }
     void Update()
     {
+        ButtonClick();
+
+        if (villager != null)
+        {
+            villager.seeds = seeds;
+            seedCountScript.seedValue = villager.seeds;
+        }
+
         if (mouseControl)
         {
             // gets a tile's collider on the game window that a raycast hit
@@ -104,7 +127,7 @@ public class MouseController : MonoBehaviour
                 {
                     if (!villagerPlaced)
                     {
-                        if (villager == null)
+                        if (villager == null && !overlayTile.isBlocked)
                         {
                             // if the villager is not placed and there is no villager prefab in the scene,
                             // instantiate the villager
@@ -116,7 +139,8 @@ public class MouseController : MonoBehaviour
                             //villagerButtonClicked = false;
                         }
                     }
-                    if (villagerPlaced)
+                    else
+                    if (villagerPlaced && !overlayTile.isBlocked)
                     {
                         PositionCharacterOnTile(overlayTile);
                         villagerPlaced = true;
@@ -126,65 +150,77 @@ public class MouseController : MonoBehaviour
                 #endregion
 
                 #region HOE BUTTON PRESS
-                if (Input.GetMouseButtonDown(0) && hoeButtonClicked && villagerPlaced)
+                if (Input.GetMouseButtonDown(0) && hoeButtonClicked)
                 {
-                    if(overlayTile.isTilled == false)
+                    if(!overlayTile.isTilled && !overlayTile.isBlocked)
                     {
-                        // if a villager is in the scene, can right click to till tiles
+                        // click to till tiles
                         overlayTile.TillTile();
                         // add the villager's seed count accordingly
                         if (tilledTiles.Count >= 0)
                         {
-                            villager.seeds++;
-                            Debug.Log("seeds " + villager.seeds);
+                            //villager.seeds++;
+                            seeds++;
+                            Debug.Log("seeds " + seeds);
                         }
                         // add tilled tiles to the list
                         tilledTiles.Add(overlayTile);
                         toHarvest.Add(overlayTile);
                     }
                     else
+                    if (overlayTile.isTilled && !overlayTile.isBlocked)
                     {
-                        // if a villager is in the screen, can left click to untill a tile (if tilled)
+                        // can click to untill a tile (if tilled)
                         overlayTile.UntillTile();
                         // deduct the villager's seed count accordingly
                         if (tilledTiles.Count > 0)
-                            villager.seeds--;
+                            //villager.seeds--;
+                            seeds--;
                         // remove tile to the list
                         tilledTiles.Remove(overlayTile);
                         toHarvest.Remove(overlayTile);
                     }
-                    seedCountScript.seedValue = villager.seeds;
+                    
                 }
                 #endregion
 
                 #region PICKAXE BUTTON PRESS
                 if (Input.GetMouseButtonDown(0) && pickaxeButtonClicked)
                 {
-                    if(overlayTile.isTilled == true)
+
+                    if(overlayTile.isTilled && villager.activeTile != overlayTile)
                     {
+                        Debug.Log("Override");
                         // if a tilled tile is selected, untill that tile and replace with obstacle
                         overlayTile.UntillTile();
                         overlayTile.BlockTile();
                         // deduct the villager's seed count accordingly
                         if (tilledTiles.Count > 0)
-                            villager.seeds--;
+                            //villager.seeds--;
+                            seeds--;
                         // remove tile to the list
                         tilledTiles.Remove(overlayTile);
                         toHarvest.Remove(overlayTile);
                         // overlayTile.isBlocked = true;
                     }
-                    else if(overlayTile.isBlocked == true)
+                    else if(overlayTile.isBlocked && villager.activeTile != overlayTile)
                     {
                         // place obstacle on tile
                         Debug.Log("here");
                         overlayTile.UnblockTile();
                         // overlayTile.isBlocked = false;
                     }
-                    else
+                    else 
+                    if (!villagerPlaced)
                     {
+
                         Debug.Log("here here");
                         overlayTile.BlockTile();
                         // overlayTile.isBlocked = true;
+                    }
+                    else if (villagerPlaced && villager.activeTile != overlayTile)
+                    {
+                        overlayTile.BlockTile();
                     }
                 }
             #endregion
@@ -196,6 +232,30 @@ public class MouseController : MonoBehaviour
             
         }
 
+    }
+
+    private void ButtonClick()
+    {
+        if (hoeButtonClicked)
+        {
+            _hoeButton.GetComponent<Image>().sprite = hoeSelected;
+            _villagerButton.GetComponent<Image>().sprite = defaultVillager;
+            _pickaxeButton.GetComponent<Image>().sprite = defaultPickaxe;
+        }
+
+        if (pickaxeButtonClicked)
+        {
+            _hoeButton.GetComponent<Image>().sprite = defaultHoe;
+            _villagerButton.GetComponent<Image>().sprite = pickaxeSelected;
+            _pickaxeButton.GetComponent<Image>().sprite = defaultPickaxe;
+        }
+
+        if (villagerButtonClicked)
+        {
+            _hoeButton.GetComponent<Image>().sprite = defaultHoe;
+            _villagerButton.GetComponent<Image>().sprite = villagerSelected;
+            _pickaxeButton.GetComponent<Image>().sprite = defaultPickaxe;
+        }
     }
 
     // simple raycast function that gets everything the line touches from top to bottom

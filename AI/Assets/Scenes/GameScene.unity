@@ -234,18 +234,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 531484301}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1118077233}
-  m_Father: {fileID: 1091541995}
+  m_Father: {fileID: 2014395193}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 88.00003, y: 7.5}
+  m_AnchoredPosition: {x: 88.00003, y: -119.875}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &531484303
@@ -420,6 +420,7 @@ MonoBehaviour:
   plantManager: {fileID: 1610813631}
   mouseController: {fileID: 1887063086}
   harvestManager: {fileID: 2037509537}
+  buttons: {fileID: 2014395192}
 --- !u!4 &545539041
 Transform:
   m_ObjectHideFlags: 0
@@ -929,18 +930,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 779040201}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1624757053}
-  m_Father: {fileID: 1091541995}
+  m_Father: {fileID: 2014395193}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 265.5, y: 7.5}
+  m_AnchoredPosition: {x: 265.5, y: -119.875}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &779040203
@@ -1242,7 +1243,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919233727}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1461,10 +1462,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1167938172}
-  - {fileID: 779040202}
-  - {fileID: 531484302}
-  - {fileID: 1739947180}
+  - {fileID: 2014395193}
   - {fileID: 1401341554}
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -1578,18 +1576,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1167938171}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 919233728}
-  m_Father: {fileID: 1091541995}
+  m_Father: {fileID: 2014395193}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -265.5, y: 7.5}
+  m_AnchoredPosition: {x: -265.5, y: -119.875}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1167938173
@@ -1606,12 +1604,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   villagerPrefab: {fileID: 0}
   villager: {fileID: 0}
+  seeds: 0
   mouseControl: 0
   villagerPlaced: 0
   isMoving: 0
   villagerButtonClicked: 0
+  _villagerButton: {fileID: 0}
+  defaultVillager: {fileID: 0}
+  villagerSelected: {fileID: 0}
   hoeButtonClicked: 0
+  _hoeButton: {fileID: 0}
+  defaultHoe: {fileID: 0}
+  hoeSelected: {fileID: 0}
   pickaxeButtonClicked: 0
+  _pickaxeButton: {fileID: 0}
+  defaultPickaxe: {fileID: 0}
+  pickaxeSelected: {fileID: 0}
   tilledTiles: []
   toHarvest: []
 --- !u!114 &1167938174
@@ -1923,7 +1931,7 @@ RectTransform:
   - {fileID: 1914029831}
   - {fileID: 1570520595}
   m_Father: {fileID: 1091541995}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2175,7 +2183,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1624757052}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2284,18 +2292,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1739947179}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1000761631}
-  m_Father: {fileID: 1091541995}
+  m_Father: {fileID: 2014395193}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -92.20001, y: 7.5}
+  m_AnchoredPosition: {x: -92.20001, y: -119.875}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1739947181
@@ -2670,12 +2678,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   villagerPrefab: {fileID: 8953717638772790955, guid: f4a94df9308dc884da311eb2e6086370, type: 3}
   villager: {fileID: 0}
+  seeds: 0
   mouseControl: 0
   villagerPlaced: 0
   isMoving: 0
   villagerButtonClicked: 0
+  _villagerButton: {fileID: 779040201}
+  defaultVillager: {fileID: 21300000, guid: 33455bc3acc6fee4c904a56f2b761ab9, type: 3}
+  villagerSelected: {fileID: 21300000, guid: 4478874c961b4eb4ea07f4c1f5465405, type: 3}
   hoeButtonClicked: 0
+  _hoeButton: {fileID: 531484301}
+  defaultHoe: {fileID: 21300000, guid: dcc4eda7af41a17478b176842990ddaa, type: 3}
+  hoeSelected: {fileID: 21300000, guid: 552ea59b05c7cf844983cc15480a7793, type: 3}
   pickaxeButtonClicked: 0
+  _pickaxeButton: {fileID: 1739947179}
+  defaultPickaxe: {fileID: 21300000, guid: c248de6b8c637ef4f81e52c0a4fac9d2, type: 3}
+  pickaxeSelected: {fileID: 21300000, guid: d348df775746dee498e78e7db4a16ebe, type: 3}
   tilledTiles: []
   toHarvest: []
 --- !u!1 &1914029830
@@ -2771,6 +2789,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6475154623a3644d4b605a0ed56a2782, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2014395192
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2014395193}
+  m_Layer: 5
+  m_Name: Buttons
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2014395193
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014395192}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1167938172}
+  - {fileID: 779040202}
+  - {fileID: 531484302}
+  - {fileID: 1739947180}
+  m_Father: {fileID: 1091541995}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2037509536
 GameObject:
   m_ObjectHideFlags: 0
@@ -2810,7 +2868,7 @@ MonoBehaviour:
   tileFound: 0
   canPatrol: 0
   patrolling: 0
-  patrolRange: 0
+  patrolRange: 5
   path: []
   grownTiles: []
   inRangeTiles: []
