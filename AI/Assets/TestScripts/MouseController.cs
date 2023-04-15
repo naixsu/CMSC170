@@ -95,6 +95,11 @@ public class MouseController : MonoBehaviour
         pickaxeButtonClicked = false;
         hoeButtonClicked = false;
     }
+
+    public void Randomize()
+    {
+        Debug.Log("Randomize");
+    }
     
     void Update()
     {
