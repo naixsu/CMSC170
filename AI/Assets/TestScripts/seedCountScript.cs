@@ -5,11 +5,12 @@ using UnityEngine.UI;
 
 public class seedCountScript : MonoBehaviour
 {
-    public static int seedValue = 0;
+    public static int seedValue;
     Text seed;
     // Start is called before the first frame update
     void Start()
     {
+        seedValue = 0;
         seed = GetComponent<Text> ();
     }
 
