@@ -11,6 +11,7 @@ public class MouseController : MonoBehaviour
 {
     public GameObject villagerPrefab;
     public VillagerInfo villager;
+    public Dictionary<Vector2Int, OverlayTile> map;
 
     public int seeds;
     public bool mouseControl;
@@ -59,6 +60,7 @@ public class MouseController : MonoBehaviour
 
     private void Start()
     {
+        map = MapManager.Instance.map;
         seeds = 0;
     }
 
@@ -98,7 +100,10 @@ public class MouseController : MonoBehaviour
 
     public void Randomize()
     {
-        Debug.Log("Randomize");
+        Debug.Log("Randomizing");
+        RandomVillager();
+        RandomTilledTiles();
+        RandomBlockedTiles();
     }
     
     void Update()
@@ -264,6 +269,83 @@ public class MouseController : MonoBehaviour
                 gameObject.GetComponent<SpriteRenderer>().enabled = false;
             }   
         }
+    }
+
+    private void RandomVillager()
+    {
+        // Randomize Villager position
+        // Destroy previous villager if exists
+        if (villagerPlaced) Destroy(villager.gameObject);
+
+        Vector2Int randomVillagerPos = GetRandomMapPosition();
+        OverlayTile villagerTile = map[randomVillagerPos];
+
+        villager = Instantiate(villagerPrefab).GetComponent<VillagerInfo>();
+
+        PositionCharacterOnTile(villagerTile);
+        villagerPlaced = true;
+    }
+
+    private void RandomTilledTiles()
+    {
+        // Destroy tilled tiles if exists
+        foreach (KeyValuePair<Vector2Int, OverlayTile> tile in map)
+        {
+            OverlayTile tileInfo = tile.Value;
+            if (tileInfo.isTilled)
+            {
+                tileInfo.UntillTile();
+                tilledTiles.Remove(tileInfo);
+            }
+           
+        }
+        // Randomize Tilled Tiles
+        int numTilledTiles = Random.Range(1, map.Count);
+        for (int i = 0; i < numTilledTiles; i++)
+        {
+            Vector2Int randomTilledPos = GetRandomMapPosition();
+            OverlayTile tilledTile = map[randomTilledPos];
+            if (!tilledTile.isBlocked && !tilledTile.isTilled)
+            {
+                tilledTile.TillTile();
+                tilledTiles.Add(tilledTile);
+            }
+        }
+        seeds = numTilledTiles;
+    }
+
+    private void RandomBlockedTiles()
+    {
+        // Destroy blocked tiles if exists
+        foreach (KeyValuePair<Vector2Int, OverlayTile> tile in map)
+        {
+            OverlayTile tileInfo = tile.Value;
+            if (tileInfo.isBlocked)
+            {
+                tileInfo.UnblockTile();
+            }
+
+        }
+        // Randomize Tilled Tiles
+        int numBlockedTiles = Random.Range(1, tilledTiles.Count);
+        for (int i = 0; i < numBlockedTiles; i++)
+        {
+            Vector2Int randomTilledPos = GetRandomMapPosition();
+            OverlayTile blockedTile = map[randomTilledPos];
+            if (!blockedTile.isBlocked && blockedTile != villager.activeTile && !blockedTile.isTilled)
+            {
+                blockedTile.BlockTile();
+                tilledTiles.Remove(blockedTile);
+            }
+        }
+    }
+
+    private Vector2Int GetRandomMapPosition()
+    {
+        // Get a random tile from the dictionary
+        KeyValuePair<Vector2Int, OverlayTile> randomTile = map.ElementAt(Random.Range(0, map.Count));
+        return randomTile.Key;
+
     }
 
     private void ButtonClick()
