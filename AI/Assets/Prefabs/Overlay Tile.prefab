@@ -193,6 +193,7 @@ MonoBehaviour:
   plantedSprite: {fileID: 21300000, guid: 8d8bb141c1b230f41aef08cf8924aa85, type: 3}
   blocked: {fileID: 21300000, guid: 1c9fe18ab1f423d4fae5655393dfcdfd, type: 3}
   grass: {fileID: 21300000, guid: 1ae0de32db77a7446b945e3905938be3, type: 3}
+  till: {fileID: 21300000, guid: 06179ef12d83635498a8857495134e37, type: 3}
   growth1: {fileID: 21300000, guid: bef30127a12a6224996a9ae65de69863, type: 3}
   growth2: {fileID: 21300000, guid: 0aa253c44c61ea24e8ca13c9982127ae, type: 3}
   growth3: {fileID: 21300000, guid: 560607856f1c63a4d908ce50985a2d43, type: 3}

@@ -11,6 +11,7 @@ public class MapManager : MonoBehaviour
 
     public OverlayTile overlayTilePrefab;
     public GameObject overlayContainer;
+    [SerializeField] private Tilemap tileMap;
 
     public Dictionary<Vector2Int, OverlayTile> map;
     [SerializeField] private Camera _camera;
@@ -59,7 +60,7 @@ public class MapManager : MonoBehaviour
         // get a dictionary of all the tiles in the screen
         map = new Dictionary<Vector2Int, OverlayTile>();
 
-        var tileMap = gameObject.GetComponentInChildren<Tilemap>();
+        //var tileMap = gameObject.GetComponentInChildren<Tilemap>();
         var count = 0;
 
         // the tilemap's bounds (position , size)
@@ -97,7 +98,7 @@ public class MapManager : MonoBehaviour
 
         // try to center camera based on the tilemap's bounds
         // need to make this function perfect
-        ResizeCameraToTilemap(tileMap);
+        ResizeCameraToMap(4f);
 
 
         // switch GameState once setup is finished
@@ -105,20 +106,44 @@ public class MapManager : MonoBehaviour
         GameManager.instance.UpdateGameState(GameManager.GameState.MouseControl);
     }
 
-
-    private void ResizeCameraToTilemap(Tilemap tilemap)
+    private void ResizeCameraToMap(float zoomOut = 0f)
     {
-        BoundsInt bounds = tilemap.cellBounds;
-        Vector3Int minTilePosition = bounds.min;
-        Vector3Int maxTilePosition = bounds.max;
+        Debug.Log("Resizing");
+        Vector3 bottomLeftCorner = new Vector3(float.MaxValue, float.MaxValue, 0f);
+        Vector3 topRightCorner = new Vector3(float.MinValue, float.MinValue, 0f);
 
-        // Get the position of the corners of the tilemap in world space
-        Vector3 bottomLeftCorner = tilemap.CellToWorld(minTilePosition) + new Vector3(0.5f, 0.5f, 0f);
-        Vector3 topRightCorner = tilemap.CellToWorld(maxTilePosition) - new Vector3(0.5f, 0.5f, 0f);
+        // Find the bounds of the map
+        foreach (KeyValuePair<Vector2Int, OverlayTile> tile in map)
+        {
+            Vector3 tilePosition = tile.Value.transform.position;
+
+            if (tilePosition.x < bottomLeftCorner.x)
+            {
+                bottomLeftCorner.x = tilePosition.x;
+            }
+
+            if (tilePosition.y < bottomLeftCorner.y)
+            {
+                bottomLeftCorner.y = tilePosition.y;
+            }
+
+            if (tilePosition.x > topRightCorner.x)
+            {
+                topRightCorner.x = tilePosition.x;
+            }
+
+            if (tilePosition.y > topRightCorner.y)
+            {
+                topRightCorner.y = tilePosition.y;
+            }
+        }
 
         // Calculate the camera's new position and size
         Vector3 cameraPosition = (bottomLeftCorner + topRightCorner) / 2f;
         float cameraSize = Mathf.Max((topRightCorner.y - bottomLeftCorner.y) / 2f, (topRightCorner.x - bottomLeftCorner.x) / 2f / _camera.aspect) + _padding;
+
+        // Zoom out the camera
+        cameraSize += zoomOut;
 
         // Set the camera's position and size
         _camera.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, _camera.transform.position.z);
@@ -127,11 +152,49 @@ public class MapManager : MonoBehaviour
 
 
 
+    public List<OverlayTile> TryGetNeighborTiles(OverlayTile overlayTile)
+    {
+        Debug.Log("TryGetNeighborTiles");
+
+        List<OverlayTile> neighborTiles = new List<OverlayTile>();
+
+        // get coordinates of current tile
+        Vector3Int currentPos = overlayTile.gridLocation;
+
+        // get neighboring tiles
+        for (int x = currentPos.x - 1; x <= currentPos.x + 1; x++)
+        {
+            for (int y = currentPos.y - 1; y <= currentPos.y + 1; y++)
+            {
+                if (x == currentPos.x && y == currentPos.y)
+                {
+                    continue;
+                }
+
+                if (map.TryGetValue(new Vector2Int(x, y), out OverlayTile neighborTile))
+                {
+                    // check if neighbor tile is blocked or not
+                    if (!neighborTile.isBlocked)
+                    {
+                        // check if the diagonal tile is blocked
+                        bool blockedHorizontal = map.TryGetValue(new Vector2Int(x, currentPos.y), out OverlayTile horizontalTile) && horizontalTile.isBlocked;
+                        bool blockedVertical = map.TryGetValue(new Vector2Int(currentPos.x, y), out OverlayTile verticalTile) && verticalTile.isBlocked;
+                        if (!blockedHorizontal || !blockedVertical)
+                        {
+                            neighborTiles.Add(neighborTile);
+                        }
+                    }
+                }
+            }
+        }
+
+        return neighborTiles;
+    }
 
 
     public List<OverlayTile> GetNeighborTiles(OverlayTile currentOverlayTile)
     {
-        // pathfinding algorithm
+        Debug.Log("GetNeighborTiles");
 
         // list of neighboring tiles top, down, left, right, topleft, topright, downleft, downright
         List<OverlayTile> neighbors = new List<OverlayTile>();
@@ -147,7 +210,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -160,7 +223,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -173,7 +236,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -186,7 +249,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -199,7 +262,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -212,7 +275,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -225,7 +288,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -238,7 +301,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 

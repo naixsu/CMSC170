@@ -11,13 +11,28 @@ public class MouseController : MonoBehaviour
 {
     public GameObject villagerPrefab;
     public VillagerInfo villager;
+    public Dictionary<Vector2Int, OverlayTile> map;
 
+    public int seeds;
     public bool mouseControl;
     public bool villagerPlaced = false;
     public bool isMoving;
+
     public bool villagerButtonClicked = false;
+    [SerializeField] private GameObject _villagerButton;
+    [SerializeField] private Sprite defaultVillager;
+    [SerializeField] private Sprite villagerSelected;
+
     public bool hoeButtonClicked = false;
+    [SerializeField] private GameObject _hoeButton;
+    [SerializeField] private Sprite defaultHoe;
+    [SerializeField] private Sprite hoeSelected;
+
     public bool pickaxeButtonClicked = false;
+    [SerializeField] private GameObject _pickaxeButton;
+    [SerializeField] private Sprite defaultPickaxe;
+    [SerializeField] private Sprite pickaxeSelected;
+
     public List<OverlayTile> tilledTiles = new List<OverlayTile>();
     public List<OverlayTile> toHarvest = new List<OverlayTile>();
 
@@ -45,6 +60,8 @@ public class MouseController : MonoBehaviour
 
     private void Start()
     {
+        map = MapManager.Instance.map;
+        seeds = 0;
     }
 
     // Update is called once per frame
@@ -80,8 +97,24 @@ public class MouseController : MonoBehaviour
         pickaxeButtonClicked = false;
         hoeButtonClicked = false;
     }
+
+    public void Randomize()
+    {
+        Debug.Log("Randomizing");
+        RandomVillager();
+        RandomTilledTiles();
+        RandomBlockedTiles();
+    }
+    
     void Update()
     {
+        ButtonClick();
+        if (villagerPlaced)
+        {
+            villager.seeds = seeds;
+        }
+        seedCountScript.seedValue = seeds;
+
         if (mouseControl)
         {
             // gets a tile's collider on the game window that a raycast hit
@@ -100,11 +133,11 @@ public class MouseController : MonoBehaviour
                 gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
 
                 #region VILLAGER BUTTON PRESS
-                if (Input.GetMouseButtonDown(0) && villagerButtonClicked)
+                if (Input.GetMouseButtonDown(1) && villagerButtonClicked)
                 {
                     if (!villagerPlaced)
                     {
-                        if (villager == null)
+                        if (villager == null && !overlayTile.isBlocked)
                         {
                             // if the villager is not placed and there is no villager prefab in the scene,
                             // instantiate the villager
@@ -116,86 +149,227 @@ public class MouseController : MonoBehaviour
                             //villagerButtonClicked = false;
                         }
                     }
+
                     if (villagerPlaced)
                     {
-                        PositionCharacterOnTile(overlayTile);
-                        villagerPlaced = true;
+                        if (!overlayTile.isBlocked)
+                        {
+                            PositionCharacterOnTile(overlayTile);
+                            villagerPlaced = true;
+                        }
                     }
+                }
 
+                else if (Input.GetMouseButton(0) && villagerButtonClicked)
+                {
+                    if (villagerPlaced)
+                    {
+                        if (overlayTile == villager.activeTile)
+                        {
+                            Debug.Log("Destroy");
+                            Destroy(villager.gameObject);
+                            villagerPlaced = false;
+                        }
+                    }
                 }
                 #endregion
 
                 #region HOE BUTTON PRESS
-                if (Input.GetMouseButtonDown(0) && hoeButtonClicked && villagerPlaced)
+                if (Input.GetMouseButton(1) && hoeButtonClicked)
                 {
-                    if(overlayTile.isTilled == false)
+                    if(!overlayTile.isTilled && !overlayTile.isBlocked)
                     {
-                        // if a villager is in the scene, can right click to till tiles
+                        // click to till tiles
                         overlayTile.TillTile();
                         // add the villager's seed count accordingly
                         if (tilledTiles.Count >= 0)
                         {
-                            villager.seeds++;
-                            Debug.Log("seeds " + villager.seeds);
+                            //villager.seeds++;
+                            seeds++;
+                            Debug.Log("seeds " + seeds);
                         }
                         // add tilled tiles to the list
                         tilledTiles.Add(overlayTile);
                         toHarvest.Add(overlayTile);
-                    }
-                    else
+                    }         
+                }
+
+                else if (Input.GetMouseButton(0) && hoeButtonClicked)
+                {
+                    if (overlayTile.isTilled && !overlayTile.isBlocked)
                     {
-                        // if a villager is in the screen, can left click to untill a tile (if tilled)
+                        // can click to untill a tile (if tilled)
                         overlayTile.UntillTile();
                         // deduct the villager's seed count accordingly
                         if (tilledTiles.Count > 0)
-                            villager.seeds--;
+                            //villager.seeds--;
+                            seeds--;
                         // remove tile to the list
                         tilledTiles.Remove(overlayTile);
                         toHarvest.Remove(overlayTile);
                     }
-                    seedCountScript.seedValue = villager.seeds;
                 }
                 #endregion
 
                 #region PICKAXE BUTTON PRESS
-                if (Input.GetMouseButtonDown(0) && pickaxeButtonClicked)
+                if (Input.GetMouseButton(1) && pickaxeButtonClicked)
                 {
-                    if(overlayTile.isTilled == true)
+                    if (villagerPlaced)
                     {
-                        // if a tilled tile is selected, untill that tile and replace with obstacle
-                        overlayTile.UntillTile();
-                        overlayTile.BlockTile();
-                        // deduct the villager's seed count accordingly
-                        if (tilledTiles.Count > 0)
-                            villager.seeds--;
-                        // remove tile to the list
-                        tilledTiles.Remove(overlayTile);
-                        toHarvest.Remove(overlayTile);
-                        // overlayTile.isBlocked = true;
+                        if ((overlayTile.isTilled && villager.activeTile != overlayTile) || 
+                            (!overlayTile.isTilled && villager.activeTile != overlayTile))
+                        {
+                            Debug.Log("Override");
+                            // if a tilled tile is selected, replace with obstacle
+                            overlayTile.BlockTile();
+                            // deduct the villager's seed count accordingly
+                            if (tilledTiles.Count > 0) seeds--;
+                            // remove tile to the list
+                            tilledTiles.Remove(overlayTile);
+                            toHarvest.Remove(overlayTile);
+                            // overlayTile.isBlocked = true;
+                        }                                  
                     }
-                    else if(overlayTile.isBlocked == true)
+
+                    if (!villagerPlaced)
                     {
-                        // place obstacle on tile
-                        Debug.Log("here");
-                        overlayTile.UnblockTile();
-                        // overlayTile.isBlocked = false;
-                    }
-                    else
-                    {
-                        Debug.Log("here here");
-                        overlayTile.BlockTile();
-                        // overlayTile.isBlocked = true;
+                        if (overlayTile.isTilled || !overlayTile.isBlocked)
+                        {
+                            Debug.Log("Override");
+                            // if a tilled tile is selected, replace with obstacle
+                            overlayTile.BlockTile();
+                            // deduct the villager's seed count accordingly
+                            if (tilledTiles.Count > 0) seeds--;
+                            // remove tile to the list
+                            tilledTiles.Remove(overlayTile);
+                            toHarvest.Remove(overlayTile);
+                        }
                     }
                 }
+
+                else if (Input.GetMouseButton(0) && pickaxeButtonClicked)
+                {
+                    if (villagerPlaced)
+                    {
+                        if (overlayTile.isBlocked && villager.activeTile != overlayTile) overlayTile.UnblockTile();
+                    }
+                    if (!villagerPlaced)
+                    {
+                        if (overlayTile.isBlocked) overlayTile.UnblockTile();
+                    }
+                }
+
+
+
             #endregion
             }
             else
             {
+                // disable cursor sprite once cursor is outside tiles
                 gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            }   
+        }
+    }
+
+    private void RandomVillager()
+    {
+        // Randomize Villager position
+        // Destroy previous villager if exists
+        if (villagerPlaced) Destroy(villager.gameObject);
+
+        Vector2Int randomVillagerPos = GetRandomMapPosition();
+        OverlayTile villagerTile = map[randomVillagerPos];
+
+        villager = Instantiate(villagerPrefab).GetComponent<VillagerInfo>();
+
+        PositionCharacterOnTile(villagerTile);
+        villagerPlaced = true;
+    }
+
+    private void RandomTilledTiles()
+    {
+        // Destroy tilled tiles if exists
+        foreach (KeyValuePair<Vector2Int, OverlayTile> tile in map)
+        {
+            OverlayTile tileInfo = tile.Value;
+            if (tileInfo.isTilled)
+            {
+                tileInfo.UntillTile();
+                tilledTiles.Remove(tileInfo);
             }
-            
+           
+        }
+        // Randomize Tilled Tiles
+        int numTilledTiles = Random.Range(1, map.Count);
+        for (int i = 0; i < numTilledTiles; i++)
+        {
+            Vector2Int randomTilledPos = GetRandomMapPosition();
+            OverlayTile tilledTile = map[randomTilledPos];
+            if (!tilledTile.isBlocked && !tilledTile.isTilled)
+            {
+                tilledTile.TillTile();
+                tilledTiles.Add(tilledTile);
+            }
+        }
+        seeds = numTilledTiles;
+    }
+
+    private void RandomBlockedTiles()
+    {
+        // Destroy blocked tiles if exists
+        foreach (KeyValuePair<Vector2Int, OverlayTile> tile in map)
+        {
+            OverlayTile tileInfo = tile.Value;
+            if (tileInfo.isBlocked)
+            {
+                tileInfo.UnblockTile();
+            }
+
+        }
+        // Randomize Tilled Tiles
+        int numBlockedTiles = Random.Range(1, tilledTiles.Count);
+        for (int i = 0; i < numBlockedTiles; i++)
+        {
+            Vector2Int randomTilledPos = GetRandomMapPosition();
+            OverlayTile blockedTile = map[randomTilledPos];
+            if (!blockedTile.isBlocked && blockedTile != villager.activeTile && !blockedTile.isTilled)
+            {
+                blockedTile.BlockTile();
+                tilledTiles.Remove(blockedTile);
+            }
+        }
+    }
+
+    private Vector2Int GetRandomMapPosition()
+    {
+        // Get a random tile from the dictionary
+        KeyValuePair<Vector2Int, OverlayTile> randomTile = map.ElementAt(Random.Range(0, map.Count));
+        return randomTile.Key;
+
+    }
+
+    private void ButtonClick()
+    {
+        if (hoeButtonClicked)
+        {
+            _hoeButton.GetComponent<Image>().sprite = hoeSelected;
+            _villagerButton.GetComponent<Image>().sprite = defaultVillager;
+            _pickaxeButton.GetComponent<Image>().sprite = defaultPickaxe;
         }
 
+        if (pickaxeButtonClicked)
+        {
+            _hoeButton.GetComponent<Image>().sprite = defaultHoe;
+            _villagerButton.GetComponent<Image>().sprite = defaultVillager;
+            _pickaxeButton.GetComponent<Image>().sprite = pickaxeSelected;
+        }
+
+        if (villagerButtonClicked)
+        {
+            _hoeButton.GetComponent<Image>().sprite = defaultHoe;
+            _villagerButton.GetComponent<Image>().sprite = villagerSelected;
+            _pickaxeButton.GetComponent<Image>().sprite = defaultPickaxe;
+        }
     }
 
     // simple raycast function that gets everything the line touches from top to bottom
