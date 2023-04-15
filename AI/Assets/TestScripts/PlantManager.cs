@@ -160,7 +160,7 @@ public class PlantManager : MonoBehaviour
         }
     }
 
-    private void CheckMove()
+    private bool CheckValidPath()
     {
         if (tileFound && path == null)
         {
@@ -168,8 +168,14 @@ public class PlantManager : MonoBehaviour
             HideHighlightRange();
             RemoveRange();
             GameManager.instance.UpdateGameState(GameManager.GameState.GameOver);
-            return;
+            return false;
         }
+        return true;
+    }
+
+    private void CheckMove()
+    {
+        if (!CheckValidPath()) return;
         // if the there is still a path from the pathfinding algo,
         // move towards the end tile
         if (path.Count > 0)

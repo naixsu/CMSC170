@@ -184,7 +184,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -197,7 +197,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -210,7 +210,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -223,7 +223,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -236,7 +236,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -249,7 +249,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -262,7 +262,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -275,7 +275,7 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            if (!neighborTile.isBlocked)
+            //if (!neighborTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
