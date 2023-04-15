@@ -8,14 +8,16 @@ public class GameControl : MonoBehaviour
     public void Retry()
     {
         //Restarts current level
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Loader.Load(Loader.Scene.GameScene);
     }
 
     public void Quit()
     {
-        //Unity Editor
+        /*//Unity Editor
         UnityEditor.EditorApplication.isPlaying = false;
         //Standalone Game
-        Application.Quit();
+        Application.Quit();*/
+        Loader.Load(Loader.Scene.EndScene);
     }
 }

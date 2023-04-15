@@ -8,7 +8,8 @@ public static class Loader
     public enum Scene
     {
         StartScene,
-        GameScene
+        GameScene,
+        EndScene
     }
     public static void Load(Scene scene)
     {
