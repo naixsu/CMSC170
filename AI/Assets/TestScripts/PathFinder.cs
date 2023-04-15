@@ -50,7 +50,7 @@ public class PathFinder
             }
 
             // neighboring tiles
-            var neighborTiles = MapManager.Instance.GetNeighborTiles(currentOverlayTile);
+            var neighborTiles = MapManager.Instance.TryGetNeighborTiles(currentOverlayTile);
 
             foreach (var neighbor in neighborTiles)
             {

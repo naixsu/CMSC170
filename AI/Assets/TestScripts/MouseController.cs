@@ -246,8 +246,8 @@ public class MouseController : MonoBehaviour
         if (pickaxeButtonClicked)
         {
             _hoeButton.GetComponent<Image>().sprite = defaultHoe;
-            _villagerButton.GetComponent<Image>().sprite = pickaxeSelected;
-            _pickaxeButton.GetComponent<Image>().sprite = defaultPickaxe;
+            _villagerButton.GetComponent<Image>().sprite = defaultVillager;
+            _pickaxeButton.GetComponent<Image>().sprite = pickaxeSelected;
         }
 
         if (villagerButtonClicked)

@@ -126,7 +126,42 @@ public class MapManager : MonoBehaviour
     }
 
 
+    public List<OverlayTile> TryGetNeighborTiles(OverlayTile overlayTile)
+    {
+        List<OverlayTile> neighborTiles = new List<OverlayTile>();
 
+        // get coordinates of current tile
+        Vector3Int currentPos = overlayTile.gridLocation;
+
+        // get neighboring tiles
+        for (int x = currentPos.x - 1; x <= currentPos.x + 1; x++)
+        {
+            for (int y = currentPos.y - 1; y <= currentPos.y + 1; y++)
+            {
+                if (x == currentPos.x && y == currentPos.y)
+                {
+                    continue;
+                }
+
+                if (map.TryGetValue(new Vector2Int(x, y), out OverlayTile neighborTile))
+                {
+                    // check if neighbor tile is blocked or not
+                    if (!neighborTile.isBlocked)
+                    {
+                        // check if the diagonal tile is blocked
+                        bool blockedHorizontal = map.TryGetValue(new Vector2Int(x, currentPos.y), out OverlayTile horizontalTile) && horizontalTile.isBlocked;
+                        bool blockedVertical = map.TryGetValue(new Vector2Int(currentPos.x, y), out OverlayTile verticalTile) && verticalTile.isBlocked;
+                        if (!blockedHorizontal || !blockedVertical)
+                        {
+                            neighborTiles.Add(neighborTile);
+                        }
+                    }
+                }
+            }
+        }
+
+        return neighborTiles;
+    }
 
 
     public List<OverlayTile> GetNeighborTiles(OverlayTile currentOverlayTile)
