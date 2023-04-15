@@ -323,7 +323,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2187d0f19708fae40bb60177a28484e0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a0a1a516142cd2f42b5dc8aa85053264, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2132,7 +2132,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: eaa179299ee880c4786b4a017b0f284d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3b0280d5e39b5f04f888a3b4471b4b15, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2799,7 +2799,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 50a79178acc22874290d7080a672e776, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 998e9a3f99ab22049bd630f879e214dd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3631,7 +3631,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4af4f2172c826f24796f9594ee51bddb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4a33a16a54de35448810e2e8f0ff44a9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4101,7 +4101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overlayTilePrefab: {fileID: 3199221992678100284, guid: 28502f1ec7aa31b4f804737ce7c03dcd, type: 3}
   overlayContainer: {fileID: 1653672666}
-  _camera: {fileID: 519420032}
+  _camera: {fileID: 519420031}
+  _padding: 1
 --- !u!1 &2146537694
 GameObject:
   m_ObjectHideFlags: 0
