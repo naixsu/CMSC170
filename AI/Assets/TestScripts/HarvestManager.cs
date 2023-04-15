@@ -276,6 +276,8 @@ public class HarvestManager : MonoBehaviour
                 Debug.Log("there are still " + grownTiles.Count + " more crops");
                 GetInRangeTiles();
             }
+            seedCountScript.seedValue = seedCountScript.seedValue - 1;
+            cropCountScript.cropValue = cropCountScript.cropValue + 1;
         }
 
         if (grownTiles.Count > 0 && isMoving)
