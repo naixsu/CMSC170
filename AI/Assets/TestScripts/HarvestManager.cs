@@ -86,7 +86,9 @@ public class HarvestManager : MonoBehaviour
         {
             StopCoroutine(coroutine);
             harvestingState = false;
-            OverlayTile randomTile = GetRandomTile();
+            // OverlayTile randomTile = GetRandomTile();
+            OverlayTile randomTile = GetRandomUnblockedTile();
+
             if (randomTile == villager.activeTile)
                 return;
             path = pathFinder.FindPath(villager.activeTile, randomTile);
@@ -111,12 +113,25 @@ public class HarvestManager : MonoBehaviour
         }
     }
 
-    private OverlayTile GetRandomTile()
+    private OverlayTile GetRandomUnblockedTile()
     {
-        // List<OverlayTile> randomNeighbors = MapManager.Instance.GetNeighborTiles(villager.activeTile);
-        List<OverlayTile> randomNeighbors = inRangeTiles;
-        OverlayTile randomTile = randomNeighbors[Random.Range(0, randomNeighbors.Count)];
-        return randomTile;
+        List<OverlayTile> unblockedTiles = new List<OverlayTile>();
+        foreach (OverlayTile tile in inRangeTiles)
+        {
+            if (!tile.isBlocked)
+            {
+                unblockedTiles.Add(tile);
+            }
+        }
+        if (unblockedTiles.Count > 0)
+        {
+            OverlayTile randomTile = unblockedTiles[Random.Range(0, unblockedTiles.Count)];
+            return randomTile;
+        }
+        else
+        {
+            return null; // no unblocked tile found
+        }
     }
 
     private IEnumerator AddRange()

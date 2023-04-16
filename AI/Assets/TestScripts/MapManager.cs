@@ -220,7 +220,6 @@ public class MapManager : MonoBehaviour
         }
 
 
-
         // top left
         locationToCheck = new Vector2Int(
             currentOverlayTile.gridLocation.x - 1,
@@ -231,7 +230,7 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-            if (!topTile.isBlocked && !leftTile.isBlocked)
+            if (!topTile.isBlocked || !leftTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -245,11 +244,9 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-            if (!bottomTile.isBlocked && !leftTile.isBlocked)
+            if (!bottomTile.isBlocked || !leftTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
-
-        
 
         // down right
         locationToCheck = new Vector2Int(
@@ -261,11 +258,10 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-            if (!bottomTile.isBlocked && !rightTile.isBlocked)
+            if (!bottomTile.isBlocked || !rightTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
-     
         // right iop
         locationToCheck = new Vector2Int(
             currentOverlayTile.gridLocation.x + 1,
@@ -276,51 +272,12 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-            if (!topTile.isBlocked && !rightTile.isBlocked)
+            if (!topTile.isBlocked || !rightTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
         #endregion
 
         return neighbors;
-    }
-
-    public List<OverlayTile> TryGetNeighborTiles(OverlayTile overlayTile)
-    {
-        Debug.Log("TryGetNeighborTiles");
-
-        List<OverlayTile> neighborTiles = new List<OverlayTile>();
-
-        // get coordinates of current tile
-        Vector3Int currentPos = overlayTile.gridLocation;
-
-        // get neighboring tiles
-        for (int x = currentPos.x - 1; x <= currentPos.x + 1; x++)
-        {
-            for (int y = currentPos.y - 1; y <= currentPos.y + 1; y++)
-            {
-                if (x == currentPos.x && y == currentPos.y)
-                {
-                    continue;
-                }
-
-                if (map.TryGetValue(new Vector2Int(x, y), out OverlayTile neighborTile))
-                {
-                    // check if neighbor tile is blocked or not
-                    if (!neighborTile.isBlocked)
-                    {
-                        // check if the diagonal tile is blocked
-                        bool blockedHorizontal = map.TryGetValue(new Vector2Int(x, currentPos.y), out OverlayTile horizontalTile) && horizontalTile.isBlocked;
-                        bool blockedVertical = map.TryGetValue(new Vector2Int(currentPos.x, y), out OverlayTile verticalTile) && verticalTile.isBlocked;
-                        if (!blockedHorizontal || !blockedVertical)
-                        {
-                            neighborTiles.Add(neighborTile);
-                        }
-                    }
-                }
-            }
-        }
-
-        return neighborTiles;
     }
 }

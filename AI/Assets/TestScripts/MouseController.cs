@@ -33,6 +33,11 @@ public class MouseController : MonoBehaviour
     [SerializeField] private Sprite defaultPickaxe;
     [SerializeField] private Sprite pickaxeSelected;
 
+    public bool randomizeButtonClicked;
+    [SerializeField] private GameObject _randomizeButton;
+    [SerializeField] private Sprite randomizeButtonSelected;
+    [SerializeField] private Sprite defaultRandomizeButton;
+
     public List<OverlayTile> tilledTiles = new List<OverlayTile>();
     public List<OverlayTile> toHarvest = new List<OverlayTile>();
 
@@ -100,10 +105,29 @@ public class MouseController : MonoBehaviour
 
     public void Randomize()
     {
+        villagerButtonClicked = false;
+        pickaxeButtonClicked = false;
+        hoeButtonClicked = false;
+        randomizeButtonClicked = true;
+
         Debug.Log("Randomizing");
+        _randomizeButton.GetComponent<Image>().sprite = randomizeButtonSelected;
+        _hoeButton.GetComponent<Image>().sprite = defaultHoe;
+        _villagerButton.GetComponent<Image>().sprite = defaultVillager;
+        _pickaxeButton.GetComponent<Image>().sprite = defaultPickaxe;
+
         RandomVillager();
         RandomTilledTiles();
         RandomBlockedTiles();
+
+        StartCoroutine(ResetRandomizeButton());
+    }
+
+    private IEnumerator ResetRandomizeButton()
+    {
+        yield return new WaitForSeconds(0.2f);
+        randomizeButtonClicked = false;
+        _randomizeButton.GetComponent<Image>().sprite = defaultRandomizeButton;
     }
     
     void Update()

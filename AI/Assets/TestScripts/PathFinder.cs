@@ -49,7 +49,7 @@ public class PathFinder
             }
 
             // neighboring tiles
-            var neighborTiles = MapManager.Instance.TryGetNeighborTiles(currentOverlayTile);
+            var neighborTiles = MapManager.Instance.NewOrderGetNeighborTiles(currentOverlayTile);
 
             foreach (var neighbor in neighborTiles)
             {
@@ -89,8 +89,6 @@ public class PathFinder
 
         return null;
     }
-
-
 
     private List<OverlayTile> GetFinishedList(OverlayTile start, OverlayTile end)
     {
