@@ -45,15 +45,10 @@ public class HarvestManager : MonoBehaviour
 
     private void GameManager_OnStateChange(GameManager.GameState state)
     {
-        if (state == GameManager.GameState.PlantSeeds)
-        {
-            plantingState = true;
-            mouseController.mouseControl = false;
-        }
-
         if (state == GameManager.GameState.HarvestSeeds)
         {
             harvestingState = true;
+            
         }
     }
     #endregion
@@ -77,6 +72,7 @@ public class HarvestManager : MonoBehaviour
     {
         if (harvestingState)
         {
+            villager.harvestingState = true;
             cropCountScript.cropValue = villager.crops;
             CheckHarvest();
             CheckMove();
@@ -109,7 +105,7 @@ public class HarvestManager : MonoBehaviour
         {
             harvestingState = false;
             Debug.Log("All seeds have been harvested");
-            GameManager.instance.UpdateGameState(GameManager.GameState.GameOver);
+            GameManager.instance.UpdateGameState(GameManager.GameState.End);
         }
     }
 
@@ -188,7 +184,8 @@ public class HarvestManager : MonoBehaviour
             Debug.Log("Try Patrol " + rng);
 
             // canPatrol is 1 in patrolRange chance
-            canPatrol = (rng == 1);
+            canPatrol = (rng == 1 && inRangeTiles.Count > 1);
+            if (rng == 1) AudioManager.Instance.PlayRandomVillagerIdle();
         }
     }
     private void GetInRangeTiles()
@@ -226,6 +223,7 @@ public class HarvestManager : MonoBehaviour
 
     private void Patrol()
     {
+        
         // if the there is still a path from the pathfinding algo,
         // move towards the end tile
         if (path.Count > 0)
@@ -303,6 +301,7 @@ public class HarvestManager : MonoBehaviour
                 canPatrol = false;
                 // harvest crop
                 villager.activeTile.HarvestCrop();
+                
                 villager.crops++;
                 isMoving = false;
 
@@ -342,6 +341,8 @@ public class HarvestManager : MonoBehaviour
             mouseController.PositionCharacterOnTile(path[0]);
             // remove the first element of the path list to move to the next tile
             path.RemoveAt(0);
+
+            
         }
     }
 }

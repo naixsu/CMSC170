@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MouseController mouseController;
     [SerializeField] private HarvestManager harvestManager;
     [SerializeField] private GameObject buttons;
+    [SerializeField] private GameObject gameOver;
+    [SerializeField] private GameObject finish;
+    [SerializeField] private GameObject instructions;
 
     private void Awake()
     {
@@ -28,6 +31,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         UpdateGameState(GameState.SetUp);
+        AudioManager.Instance.PlayRestart();
     }
 
     public void UpdateGameState(GameState newState)
@@ -48,6 +52,9 @@ public class GameManager : MonoBehaviour
             case GameState.HarvestSeeds:
                 HandleHarvestSeeds();
                 break;
+            case GameState.End:
+                HandleEnd();
+                break;
             case GameState.GameOver:
                 HandleGameOver();
                 break;
@@ -55,6 +62,19 @@ public class GameManager : MonoBehaviour
 
         OnStateChange?.Invoke(newState);
 
+    }
+
+    private void HandleEnd()
+    {
+        Debug.Log("GM: End");
+        AudioManager.Instance.PlayEnd();
+        finish.gameObject.SetActive(true);
+        StartCoroutine(GoEnd());
+    }
+    IEnumerator GoEnd()
+    {
+        yield return new WaitForSeconds(3f);
+        Loader.Load(Loader.Scene.EndScene);
     }
 
     private void HandleSetUp()
@@ -71,6 +91,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GM: Planting Seeds");
         mouseController.gameObject.SetActive(false);
+        instructions.gameObject.SetActive(false);
         buttons.SetActive(false);
         plantManager.gameObject.SetActive(true);
 
@@ -86,6 +107,7 @@ public class GameManager : MonoBehaviour
     private void HandleGameOver()
     {
         Debug.Log("GM: Game Over");
+        gameOver.gameObject.SetActive(true);
         harvestManager.gameObject.SetActive(false);
         plantManager.gameObject.SetActive(false);
     }
@@ -96,6 +118,7 @@ public class GameManager : MonoBehaviour
     MouseControl,
     PlantSeeds,
     HarvestSeeds,
+    End,
     GameOver,
 }
 }

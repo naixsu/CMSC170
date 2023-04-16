@@ -9,7 +9,8 @@ public class GameControl : MonoBehaviour
     {
         //Restarts current level
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Loader.Load(Loader.Scene.GameScene);
+        StartCoroutine(RetryLevel());
+        
     }
 
     public void Quit()
@@ -18,6 +19,19 @@ public class GameControl : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
         //Standalone Game
         Application.Quit();*/
+        StartCoroutine(QuitLevel());
+        
+    }
+
+    IEnumerator QuitLevel()
+    {
+        yield return new WaitForSeconds(0.1f);
         Loader.Load(Loader.Scene.EndScene);
+    }
+    IEnumerator RetryLevel()
+    {
+        yield return new WaitForSeconds(0.1f);
+        Loader.Load(Loader.Scene.GameScene);
+        
     }
 }

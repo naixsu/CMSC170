@@ -40,12 +40,8 @@ public class PlantManager : MonoBehaviour
         if (state == GameManager.GameState.PlantSeeds)
         {
             plantingState = true;
+            
             mouseController.mouseControl = false;
-        }
-
-        if (state == GameManager.GameState.HarvestSeeds)
-        {
-            harvestingState = true;
         }
     }
     #endregion
@@ -67,6 +63,7 @@ public class PlantManager : MonoBehaviour
     {
         if (plantingState)
         {
+            villager.plantingState = true;
             seedCountScript.seedValue = villager.seeds;
             CheckPlant();
             CheckMove();
@@ -169,6 +166,7 @@ public class PlantManager : MonoBehaviour
             Debug.Log("No possible path found");
             HideHighlightRange();
             RemoveRange();
+            AudioManager.Instance.PlayHaggle();
             GameManager.instance.UpdateGameState(GameManager.GameState.GameOver);
             return false;
         }
@@ -182,6 +180,7 @@ public class PlantManager : MonoBehaviour
         // move towards the end tile
         if (path.Count > 0)
         {
+            
             MoveAlongPath();
             isMoving = true;
         }
