@@ -66,6 +66,7 @@ public class HarvestManager : MonoBehaviour
         rangeFinder = new RangeFinder();
         grownTiles = mouseController.toHarvest;
         map = MapManager.Instance.map;
+        seedCountScript.seedValue = villager.seeds;
 
 
         // start range detection
@@ -76,6 +77,7 @@ public class HarvestManager : MonoBehaviour
     {
         if (harvestingState)
         {
+            cropCountScript.cropValue = villager.crops;
             CheckHarvest();
             CheckMove();
         }
@@ -258,7 +260,7 @@ public class HarvestManager : MonoBehaviour
             canPatrol = false;
             // harvest crop
             villager.activeTile.HarvestCrop();
-            villager.crops--;
+            villager.crops++;
             isMoving = false;
 
             // reset range
@@ -276,8 +278,6 @@ public class HarvestManager : MonoBehaviour
                 Debug.Log("there are still " + grownTiles.Count + " more crops");
                 GetInRangeTiles();
             }
-            seedCountScript.seedValue = seedCountScript.seedValue - 1;
-            cropCountScript.cropValue = cropCountScript.cropValue + 1;
         }
 
         if (grownTiles.Count > 0 && isMoving)
@@ -288,7 +288,7 @@ public class HarvestManager : MonoBehaviour
                 canPatrol = false;
                 // harvest crop
                 villager.activeTile.HarvestCrop();
-                villager.crops--;
+                villager.crops++;
                 isMoving = false;
 
                 // reset range

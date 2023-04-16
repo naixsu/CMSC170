@@ -223,7 +223,7 @@ public class MouseController : MonoBehaviour
                             // if a tilled tile is selected, replace with obstacle
                             overlayTile.BlockTile();
                             // deduct the villager's seed count accordingly
-                            if (tilledTiles.Count > 0) seeds--;
+                            if (tilledTiles.Count > 0 && overlayTile.isTilled) seeds--;
                             // remove tile to the list
                             tilledTiles.Remove(overlayTile);
                             toHarvest.Remove(overlayTile);
@@ -239,7 +239,7 @@ public class MouseController : MonoBehaviour
                             // if a tilled tile is selected, replace with obstacle
                             overlayTile.BlockTile();
                             // deduct the villager's seed count accordingly
-                            if (tilledTiles.Count > 0) seeds--;
+                            if (tilledTiles.Count > 0 && overlayTile.isTilled) seeds--;
                             // remove tile to the list
                             tilledTiles.Remove(overlayTile);
                             toHarvest.Remove(overlayTile);
@@ -289,13 +289,16 @@ public class MouseController : MonoBehaviour
     private void RandomTilledTiles()
     {
         // Destroy tilled tiles if exists
+        seeds = 0;
         foreach (KeyValuePair<Vector2Int, OverlayTile> tile in map)
         {
             OverlayTile tileInfo = tile.Value;
+            
             if (tileInfo.isTilled)
             {
                 tileInfo.UntillTile();
                 tilledTiles.Remove(tileInfo);
+                toHarvest.Remove(tileInfo);
             }
            
         }
@@ -308,10 +311,12 @@ public class MouseController : MonoBehaviour
             if (!tilledTile.isBlocked && !tilledTile.isTilled)
             {
                 tilledTile.TillTile();
+                seeds++;
                 tilledTiles.Add(tilledTile);
+                toHarvest.Add(tilledTile);
             }
         }
-        seeds = numTilledTiles;
+        
     }
 
     private void RandomBlockedTiles()

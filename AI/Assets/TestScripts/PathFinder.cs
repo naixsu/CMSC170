@@ -9,7 +9,6 @@ public class PathFinder
     // https://en.wikipedia.org/wiki/A*_search_algorithm for more reference
     public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end)
     {
-        Debug.Log("Pathfinder");
         // list of OverlayTiles
         List<OverlayTile> openList = new List<OverlayTile>();
         List<OverlayTile> closedList = new List<OverlayTile>();
