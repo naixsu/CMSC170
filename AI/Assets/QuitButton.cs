@@ -15,7 +15,6 @@ public class QuitButton : MonoBehaviour
     IEnumerator GoQuit()
     {
         yield return new WaitForSeconds(0.1f);
-        UnityEditor.EditorApplication.isPlaying = false;
         Application.Quit();
     }
 }
