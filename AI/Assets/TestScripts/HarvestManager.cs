@@ -55,6 +55,7 @@ public class HarvestManager : MonoBehaviour
 
     private void Start()
     {
+        
         villager = mouseController.villager;
         range = 0;
         pathFinder = new PathFinder();
@@ -72,6 +73,7 @@ public class HarvestManager : MonoBehaviour
     {
         if (harvestingState)
         {
+            villager.plantingState = false;
             villager.harvestingState = true;
             cropCountScript.cropValue = villager.crops;
             CheckHarvest();
@@ -90,6 +92,14 @@ public class HarvestManager : MonoBehaviour
             path = pathFinder.FindPath(villager.activeTile, randomTile);
             
             canPatrol = false;
+            if (path == null)
+            {
+                
+                Debug.Log("Null path");
+                GetInRangeTiles();
+                harvestingState = true;
+                return;
+            }
             patrolling = true;
         }
 
@@ -226,7 +236,7 @@ public class HarvestManager : MonoBehaviour
         
         // if the there is still a path from the pathfinding algo,
         // move towards the end tile
-        if (path.Count > 0)
+        if (path != null && path.Count > 0)
         {
             MoveAlongPath();
             isMoving = true;
@@ -262,14 +272,9 @@ public class HarvestManager : MonoBehaviour
     {
         // if the there is still a path from the pathfinding algo,
         // move towards the end tile
-        if (path.Count > 0)
-        {
-            MoveAlongPath();
-            isMoving = true;
-        }
-
         if (grownTiles.Count > 0 && tileFound && villager.activeTile.isFullGrown && !villager.activeTile.isHarvested)
         {
+            Debug.Log("Here");
             canPatrol = false;
             // harvest crop
             villager.activeTile.HarvestCrop();
@@ -292,6 +297,14 @@ public class HarvestManager : MonoBehaviour
                 GetInRangeTiles();
             }
         }
+
+        if (path != null && path.Count > 0)
+        {
+            MoveAlongPath();
+            isMoving = true;
+        }
+
+        
 
         if (grownTiles.Count > 0 && isMoving)
         {
