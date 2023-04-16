@@ -230,7 +230,7 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-            if (!topTile.isBlocked || !leftTile.isBlocked)
+            if ((!topTile?.isBlocked ?? true) || (!leftTile?.isBlocked ?? true))
                 neighbors.Add(neighborTile);
         }
 
@@ -244,7 +244,7 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-            if (!bottomTile.isBlocked || !leftTile.isBlocked)
+            if ((!bottomTile?.isBlocked ?? true) || (!leftTile?.isBlocked ?? true))
                 neighbors.Add(neighborTile);
         }
 
@@ -258,7 +258,7 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-            if (!bottomTile.isBlocked || !rightTile.isBlocked)
+            if ((!bottomTile?.isBlocked ?? true) || (!rightTile?.isBlocked ?? true))
                 neighbors.Add(neighborTile);
         }
 
@@ -272,7 +272,7 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-            if (!topTile.isBlocked || !rightTile.isBlocked)
+            if ((!topTile?.isBlocked ?? true) || (!rightTile?.isBlocked ?? true))
                 neighbors.Add(neighborTile);
         }
 

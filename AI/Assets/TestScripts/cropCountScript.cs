@@ -6,12 +6,11 @@ using UnityEngine.UI;
 public class cropCountScript : MonoBehaviour
 {
     public static int cropValue;
-    Text crop;
+    [SerializeField] private Text crop;
     // Start is called before the first frame update
     void Start()
     {
         cropValue = 0;
-        crop = GetComponent<Text>();
     }
 
     // Update is called once per frame

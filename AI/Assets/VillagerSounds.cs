@@ -8,4 +8,5 @@ public class VillagerSounds : MonoBehaviour
     public List<AudioClip> steps = new List<AudioClip>();
     public List<AudioClip> DSteps = new List<AudioClip>();
     public AudioClip death;
+    public AudioClip haggle;
 }
