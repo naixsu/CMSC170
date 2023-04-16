@@ -98,7 +98,7 @@ public class MapManager : MonoBehaviour
 
         // try to center camera based on the tilemap's bounds
         // need to make this function perfect
-        ResizeCameraToMap(4f);
+        ResizeCameraToMap(3f);
 
 
         // switch GameState once setup is finished
