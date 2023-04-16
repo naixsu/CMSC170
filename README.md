@@ -1,4 +1,4 @@
-Just download the installer in `Installer` and you're good to go.
+Just download the [`F.A.R.M. 1.0 Installer.exe`](Installer/F.A.R.M.%201.0%20Installer.exe) in [`Installer`](https://github.com/naixsu/CMSC170/tree/main/Installer) and you're good to go.
 
 Spam listened to this song while coding.
 
