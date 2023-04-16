@@ -66,7 +66,7 @@ public class MouseController : MonoBehaviour
     private void Start()
     {
         map = MapManager.Instance.map;
-        seeds = 0;
+        seeds = 0;  
     }
 
     // Update is called once per frame
@@ -169,6 +169,7 @@ public class MouseController : MonoBehaviour
                             // basically positions the villager's transform.position according to the overlayTile's transform.position
                             // set the villager's active tile to the overlayTile detected
                             PositionCharacterOnTile(overlayTile);
+                            AudioManager.Instance.PlayRandomVillagerIdle();
                             villagerPlaced = true;
                             //villagerButtonClicked = false;
                         }
@@ -179,6 +180,7 @@ public class MouseController : MonoBehaviour
                         if (!overlayTile.isBlocked)
                         {
                             PositionCharacterOnTile(overlayTile);
+                            AudioManager.Instance.PlayRandomVillagerIdle();
                             villagerPlaced = true;
                         }
                     }
@@ -192,6 +194,7 @@ public class MouseController : MonoBehaviour
                         {
                             Debug.Log("Destroy");
                             Destroy(villager.gameObject);
+                            AudioManager.Instance.PlayVillagerDeath();
                             villagerPlaced = false;
                         }
                     }
@@ -205,6 +208,7 @@ public class MouseController : MonoBehaviour
                     {
                         // click to till tiles
                         overlayTile.TillTile();
+                        AudioManager.Instance.PlayRandomTillTile();
                         // add the villager's seed count accordingly
                         if (tilledTiles.Count >= 0)
                         {
@@ -224,6 +228,7 @@ public class MouseController : MonoBehaviour
                     {
                         // can click to untill a tile (if tilled)
                         overlayTile.UntillTile();
+                        AudioManager.Instance.PlayRandomUnTillTile();
                         // deduct the villager's seed count accordingly
                         if (tilledTiles.Count > 0)
                             //villager.seeds--;
@@ -246,6 +251,7 @@ public class MouseController : MonoBehaviour
                             Debug.Log("Override");
                             // if a tilled tile is selected, replace with obstacle
                             overlayTile.BlockTile();
+                            AudioManager.Instance.PlayRandomPlaceBlock();
                             // deduct the villager's seed count accordingly
                             if (tilledTiles.Count > 0 && overlayTile.isTilled) seeds--;
                             // remove tile to the list
@@ -262,6 +268,7 @@ public class MouseController : MonoBehaviour
                             Debug.Log("Override");
                             // if a tilled tile is selected, replace with obstacle
                             overlayTile.BlockTile();
+                            AudioManager.Instance.PlayRandomPlaceBlock();
                             // deduct the villager's seed count accordingly
                             if (tilledTiles.Count > 0 && overlayTile.isTilled) seeds--;
                             // remove tile to the list
@@ -275,11 +282,19 @@ public class MouseController : MonoBehaviour
                 {
                     if (villagerPlaced)
                     {
-                        if (overlayTile.isBlocked && villager.activeTile != overlayTile) overlayTile.UnblockTile();
+                        if (overlayTile.isBlocked && villager.activeTile != overlayTile)
+                        {
+                            overlayTile.UnblockTile();
+                            AudioManager.Instance.PlayRandomBreakBlock();
+                        }
                     }
                     if (!villagerPlaced)
                     {
-                        if (overlayTile.isBlocked) overlayTile.UnblockTile();
+                        if (overlayTile.isBlocked) 
+                        { 
+                            overlayTile.UnblockTile();
+                            AudioManager.Instance.PlayRandomBreakBlock();
+                        }
                     }
                 }
 
@@ -305,8 +320,9 @@ public class MouseController : MonoBehaviour
         OverlayTile villagerTile = map[randomVillagerPos];
 
         villager = Instantiate(villagerPrefab).GetComponent<VillagerInfo>();
-
+        
         PositionCharacterOnTile(villagerTile);
+        AudioManager.Instance.PlayRandomVillagerIdle();
         villagerPlaced = true;
     }
 
@@ -340,6 +356,8 @@ public class MouseController : MonoBehaviour
                 toHarvest.Add(tilledTile);
             }
         }
+
+        AudioManager.Instance.PlayRandomTillTile();
         
     }
 
@@ -367,6 +385,8 @@ public class MouseController : MonoBehaviour
                 tilledTiles.Remove(blockedTile);
             }
         }
+
+        AudioManager.Instance.PlayRandomPlaceBlock();
     }
 
     private Vector2Int GetRandomMapPosition()
