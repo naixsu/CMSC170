@@ -5,12 +5,13 @@ using UnityEngine.UI;
 
 public class cropCountScript : MonoBehaviour
 {
-    public static int cropValue = 0;
+    public static int cropValue;
     Text crop;
     // Start is called before the first frame update
     void Start()
     {
-        crop = GetComponent<Text> ();
+        cropValue = 0;
+        crop = GetComponent<Text>();
     }
 
     // Update is called once per frame

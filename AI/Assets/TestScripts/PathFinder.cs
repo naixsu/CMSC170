@@ -9,7 +9,6 @@ public class PathFinder
     // https://en.wikipedia.org/wiki/A*_search_algorithm for more reference
     public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end)
     {
-        Debug.Log("Pathfinder");
         // list of OverlayTiles
         List<OverlayTile> openList = new List<OverlayTile>();
         List<OverlayTile> closedList = new List<OverlayTile>();
@@ -50,7 +49,7 @@ public class PathFinder
             }
 
             // neighboring tiles
-            var neighborTiles = MapManager.Instance.TryGetNeighborTiles(currentOverlayTile);
+            var neighborTiles = MapManager.Instance.NewOrderGetNeighborTiles(currentOverlayTile);
 
             foreach (var neighbor in neighborTiles)
             {
@@ -90,8 +89,6 @@ public class PathFinder
 
         return null;
     }
-
-
 
     private List<OverlayTile> GetFinishedList(OverlayTile start, OverlayTile end)
     {

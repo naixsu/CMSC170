@@ -33,6 +33,11 @@ public class MouseController : MonoBehaviour
     [SerializeField] private Sprite defaultPickaxe;
     [SerializeField] private Sprite pickaxeSelected;
 
+    public bool randomizeButtonClicked;
+    [SerializeField] private GameObject _randomizeButton;
+    [SerializeField] private Sprite randomizeButtonSelected;
+    [SerializeField] private Sprite defaultRandomizeButton;
+
     public List<OverlayTile> tilledTiles = new List<OverlayTile>();
     public List<OverlayTile> toHarvest = new List<OverlayTile>();
 
@@ -100,10 +105,29 @@ public class MouseController : MonoBehaviour
 
     public void Randomize()
     {
+        villagerButtonClicked = false;
+        pickaxeButtonClicked = false;
+        hoeButtonClicked = false;
+        randomizeButtonClicked = true;
+
         Debug.Log("Randomizing");
+        _randomizeButton.GetComponent<Image>().sprite = randomizeButtonSelected;
+        _hoeButton.GetComponent<Image>().sprite = defaultHoe;
+        _villagerButton.GetComponent<Image>().sprite = defaultVillager;
+        _pickaxeButton.GetComponent<Image>().sprite = defaultPickaxe;
+
         RandomVillager();
         RandomTilledTiles();
         RandomBlockedTiles();
+
+        StartCoroutine(ResetRandomizeButton());
+    }
+
+    private IEnumerator ResetRandomizeButton()
+    {
+        yield return new WaitForSeconds(0.2f);
+        randomizeButtonClicked = false;
+        _randomizeButton.GetComponent<Image>().sprite = defaultRandomizeButton;
     }
     
     void Update()
@@ -223,7 +247,7 @@ public class MouseController : MonoBehaviour
                             // if a tilled tile is selected, replace with obstacle
                             overlayTile.BlockTile();
                             // deduct the villager's seed count accordingly
-                            if (tilledTiles.Count > 0) seeds--;
+                            if (tilledTiles.Count > 0 && overlayTile.isTilled) seeds--;
                             // remove tile to the list
                             tilledTiles.Remove(overlayTile);
                             toHarvest.Remove(overlayTile);
@@ -239,7 +263,7 @@ public class MouseController : MonoBehaviour
                             // if a tilled tile is selected, replace with obstacle
                             overlayTile.BlockTile();
                             // deduct the villager's seed count accordingly
-                            if (tilledTiles.Count > 0) seeds--;
+                            if (tilledTiles.Count > 0 && overlayTile.isTilled) seeds--;
                             // remove tile to the list
                             tilledTiles.Remove(overlayTile);
                             toHarvest.Remove(overlayTile);
@@ -289,13 +313,16 @@ public class MouseController : MonoBehaviour
     private void RandomTilledTiles()
     {
         // Destroy tilled tiles if exists
+        seeds = 0;
         foreach (KeyValuePair<Vector2Int, OverlayTile> tile in map)
         {
             OverlayTile tileInfo = tile.Value;
+            
             if (tileInfo.isTilled)
             {
                 tileInfo.UntillTile();
                 tilledTiles.Remove(tileInfo);
+                toHarvest.Remove(tileInfo);
             }
            
         }
@@ -308,10 +335,12 @@ public class MouseController : MonoBehaviour
             if (!tilledTile.isBlocked && !tilledTile.isTilled)
             {
                 tilledTile.TillTile();
+                seeds++;
                 tilledTiles.Add(tilledTile);
+                toHarvest.Add(tilledTile);
             }
         }
-        seeds = numTilledTiles;
+        
     }
 
     private void RandomBlockedTiles()

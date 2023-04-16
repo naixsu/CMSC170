@@ -150,54 +150,16 @@ public class MapManager : MonoBehaviour
         _camera.orthographicSize = cameraSize;
     }
 
-
-
-    public List<OverlayTile> TryGetNeighborTiles(OverlayTile overlayTile)
+    
+    public List<OverlayTile> NewOrderGetNeighborTiles(OverlayTile currentOverlayTile)
     {
-        Debug.Log("TryGetNeighborTiles");
-
-        List<OverlayTile> neighborTiles = new List<OverlayTile>();
-
-        // get coordinates of current tile
-        Vector3Int currentPos = overlayTile.gridLocation;
-
-        // get neighboring tiles
-        for (int x = currentPos.x - 1; x <= currentPos.x + 1; x++)
-        {
-            for (int y = currentPos.y - 1; y <= currentPos.y + 1; y++)
-            {
-                if (x == currentPos.x && y == currentPos.y)
-                {
-                    continue;
-                }
-
-                if (map.TryGetValue(new Vector2Int(x, y), out OverlayTile neighborTile))
-                {
-                    // check if neighbor tile is blocked or not
-                    if (!neighborTile.isBlocked)
-                    {
-                        // check if the diagonal tile is blocked
-                        bool blockedHorizontal = map.TryGetValue(new Vector2Int(x, currentPos.y), out OverlayTile horizontalTile) && horizontalTile.isBlocked;
-                        bool blockedVertical = map.TryGetValue(new Vector2Int(currentPos.x, y), out OverlayTile verticalTile) && verticalTile.isBlocked;
-                        if (!blockedHorizontal || !blockedVertical)
-                        {
-                            neighborTiles.Add(neighborTile);
-                        }
-                    }
-                }
-            }
-        }
-
-        return neighborTiles;
-    }
-
-
-    public List<OverlayTile> GetNeighborTiles(OverlayTile currentOverlayTile)
-    {
-        Debug.Log("GetNeighborTiles");
 
         // list of neighboring tiles top, down, left, right, topleft, topright, downleft, downright
         List<OverlayTile> neighbors = new List<OverlayTile>();
+        OverlayTile topTile = null;
+        OverlayTile bottomTile = null;
+        OverlayTile leftTile = null;
+        OverlayTile rightTile = null;
 
         #region GET NEIGHBORS
 
@@ -210,21 +172,9 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
+            topTile = neighborTile;
             //if (!neighborTile.isBlocked)
-                neighbors.Add(neighborTile);
-        }
-
-        // top left
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x - 1,
-            currentOverlayTile.gridLocation.y + 1
-            );
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            OverlayTile neighborTile = map[locationToCheck];
-            //if (!neighborTile.isBlocked)
-                neighbors.Add(neighborTile);
+            neighbors.Add(neighborTile);
         }
 
         // left
@@ -236,7 +186,51 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
+            leftTile = neighborTile;
             //if (!neighborTile.isBlocked)
+            neighbors.Add(neighborTile);
+        }
+
+        // down
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x,
+            currentOverlayTile.gridLocation.y - 1
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            OverlayTile neighborTile = map[locationToCheck];
+            bottomTile = neighborTile;
+            //if (!neighborTile.isBlocked)
+            neighbors.Add(neighborTile);
+        }
+
+        // right
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x + 1,
+            currentOverlayTile.gridLocation.y
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            OverlayTile neighborTile = map[locationToCheck];
+            rightTile = neighborTile;
+            //if (!neighborTile.isBlocked)
+            neighbors.Add(neighborTile);
+        }
+
+
+        // top left
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x - 1,
+            currentOverlayTile.gridLocation.y + 1
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            OverlayTile neighborTile = map[locationToCheck];
+            //if (!neighborTile.isBlocked)
+            if (!topTile.isBlocked || !leftTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -250,19 +244,7 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-                neighbors.Add(neighborTile);
-        }
-
-        // down
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x,
-            currentOverlayTile.gridLocation.y - 1
-            );
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            OverlayTile neighborTile = map[locationToCheck];
-            //if (!neighborTile.isBlocked)
+            if (!bottomTile.isBlocked || !leftTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -276,19 +258,7 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
-                neighbors.Add(neighborTile);
-        }
-
-        // right
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x + 1,
-            currentOverlayTile.gridLocation.y
-            );
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            OverlayTile neighborTile = map[locationToCheck];
-            //if (!neighborTile.isBlocked)
+            if (!bottomTile.isBlocked || !rightTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -302,6 +272,7 @@ public class MapManager : MonoBehaviour
         {
             OverlayTile neighborTile = map[locationToCheck];
             //if (!neighborTile.isBlocked)
+            if (!topTile.isBlocked || !rightTile.isBlocked)
                 neighbors.Add(neighborTile);
         }
 
@@ -309,6 +280,4 @@ public class MapManager : MonoBehaviour
 
         return neighbors;
     }
-
-
 }
