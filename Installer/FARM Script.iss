@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "F.A.R.M."
-#define MyAppVersion "1.0"
-#define MyAppPublisher "Pepes"
+#define MyAppVersion "2.0"
+#define MyAppPublisher "Pepe"
 #define MyAppURL "https://github.com/naixsu/CMSC170"
 #define MyAppExeName "F.A.R.M..exe"
 #define MyAppAssocName MyAppName + " File"
@@ -13,7 +13,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{31A556A0-DFF1-4218-966A-EDB84B4E76EC}
+AppId={{FB403208-266E-4EA0-A3E9-278E303D03EE}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -26,8 +26,8 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=C:\Unity Stuff\CMSC170\AI\Builds\Windows
-OutputBaseFilename=F.A.R.M. 1.0 Installer
+OutputDir=C:\Unity Stuff\CMSC170\Installer
+OutputBaseFilename=mysetup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
