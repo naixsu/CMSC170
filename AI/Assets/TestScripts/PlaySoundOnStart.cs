@@ -9,6 +9,6 @@ public class PlaySoundOnStart : MonoBehaviour
     {
         int randomIndex = Random.Range(0, bgmList.Count);
         AudioClip randomClip = bgmList[randomIndex];
-        AudioManager.Instance.PlaySound(randomClip);
+        PersistentAudio.Instance.PlaySound(randomClip);
     }
 }

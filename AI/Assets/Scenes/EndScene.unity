@@ -682,7 +682,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &726930982
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1091,7 +1091,7 @@ MonoBehaviour:
   villagerSource: {fileID: 128259002}
   tileSource: {fileID: 2028799717}
   restart: {fileID: 540870845}
-  end: {fileID: 0}
+  end: {fileID: 1612926466}
 --- !u!4 &1109183678
 Transform:
   m_ObjectHideFlags: 0
