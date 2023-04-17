@@ -73,7 +73,7 @@ public class GameControl : MonoBehaviour
     IEnumerator RetryLevel()
     {
         yield return new WaitForSeconds(0.1f);
-        Loader.Load(Loader.Scene.GameScene);
-        
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.buildIndex);
     }
 }

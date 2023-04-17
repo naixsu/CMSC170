@@ -229,9 +229,14 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            //if (!neighborTile.isBlocked)
-            if ((!topTile?.isBlocked ?? true) || (!leftTile?.isBlocked ?? true))
+
+            if ((topTile == null || !topTile.isBlocked) && (leftTile == null || !leftTile.isBlocked))
+            {
                 neighbors.Add(neighborTile);
+            }
+
+            /*if ((!topTile?.isBlocked ?? true) || (!leftTile?.isBlocked ?? true))
+                neighbors.Add(neighborTile);*/
         }
 
         // left down
@@ -243,9 +248,14 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            //if (!neighborTile.isBlocked)
-            if ((!bottomTile?.isBlocked ?? true) || (!leftTile?.isBlocked ?? true))
+
+            if ((bottomTile == null || !bottomTile.isBlocked) && (leftTile == null || !leftTile.isBlocked))
+            {
                 neighbors.Add(neighborTile);
+            }
+
+            /*if ((!bottomTile?.isBlocked ?? true) || (!leftTile?.isBlocked ?? true))
+                neighbors.Add(neighborTile);*/
         }
 
         // down right
@@ -257,9 +267,14 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            //if (!neighborTile.isBlocked)
-            if ((!bottomTile?.isBlocked ?? true) || (!rightTile?.isBlocked ?? true))
+
+            if ((bottomTile == null || !bottomTile.isBlocked) && (rightTile == null || !rightTile.isBlocked))
+            {
                 neighbors.Add(neighborTile);
+            }
+
+            /*if ((!bottomTile?.isBlocked ?? true) || (!rightTile?.isBlocked ?? true))
+                neighbors.Add(neighborTile);*/
         }
 
         // right iop
@@ -271,9 +286,14 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(locationToCheck))
         {
             OverlayTile neighborTile = map[locationToCheck];
-            //if (!neighborTile.isBlocked)
-            if ((!topTile?.isBlocked ?? true) || (!rightTile?.isBlocked ?? true))
+
+            if ((topTile == null || !topTile.isBlocked) && (rightTile == null || !rightTile.isBlocked))
+            {
                 neighbors.Add(neighborTile);
+            }
+
+            /*if ((!topTile?.isBlocked ?? true) || (!rightTile?.isBlocked ?? true))
+                neighbors.Add(neighborTile);*/
         }
 
         #endregion

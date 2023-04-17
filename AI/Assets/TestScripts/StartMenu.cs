@@ -17,6 +17,6 @@ public class StartMenu : MonoBehaviour
     private IEnumerator Wait()
     {
         yield return new WaitForSeconds(0.1f);
-        Loader.Load(Loader.Scene.GameScene);
+        Loader.Load(Loader.Scene.GameScene_1);
     }
 }
