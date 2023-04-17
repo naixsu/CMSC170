@@ -13,6 +13,9 @@ public class MouseController : MonoBehaviour
     public VillagerInfo villager;
     public Dictionary<Vector2Int, OverlayTile> map;
 
+    public GameObject spawnSeedsWarning;
+    [SerializeField] private GameObject _spawnSeedsButton;
+
     public int seeds;
     public bool mouseControl;
     public bool villagerPlaced = false;
@@ -90,17 +93,30 @@ public class MouseController : MonoBehaviour
     }
     public void spawnSeedsButton()
     {
-        if (villagerPlaced && !isMoving)
-            {
-                // updates GameState to PlantSeeds if there are one or more tilled tiles in the screen
-                if (tilledTiles.Count > 0)
-                    GameManager.instance.UpdateGameState(GameManager.GameState.PlantSeeds);
-                else
-                    Debug.Log("No tilled tiles to plant on");
-            }
+
+        // updates GameState to PlantSeeds if there are one or more tilled tiles in the screen
+        if (tilledTiles.Count > 0 && villagerPlaced)
+        {   
+            GameManager.instance.UpdateGameState(GameManager.GameState.PlantSeeds);
+        }
+            
+        else
+        {
+            Debug.Log("No tilled tiles to plant on");
+            GameObject SSWGO = Instantiate(spawnSeedsWarning, _spawnSeedsButton.transform);
+            StartCoroutine(DestroySSWGO(SSWGO));
+        }
+                    
         villagerButtonClicked = false;
         pickaxeButtonClicked = false;
         hoeButtonClicked = false;
+    }
+
+    IEnumerator DestroySSWGO(GameObject SSWGO)
+    {
+        Debug.Log("Destroying SSWGO");
+        yield return new WaitForSeconds(0.5f);
+        Destroy(SSWGO);
     }
 
     public void Randomize()

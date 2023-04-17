@@ -5883,6 +5883,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fb8e5713e475182418090b548703a647, type: 3}
   - {fileID: 8300000, guid: 4ab58c2d704f4f24cb1c983a08dd4fbb, type: 3}
   - {fileID: 8300000, guid: b069eecd2d68d9542af40291a24f828e, type: 3}
+  - {fileID: 8300000, guid: d87dad2740f83e64084d654830c2f836, type: 3}
 --- !u!4 &1837115798
 Transform:
   m_ObjectHideFlags: 0
@@ -6143,6 +6144,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   villagerPrefab: {fileID: 8953717638772790955, guid: f4a94df9308dc884da311eb2e6086370, type: 3}
   villager: {fileID: 0}
+  spawnSeedsWarning: {fileID: 4635765867237309729, guid: 516b8c2459b5b644d92129d409270eb4, type: 3}
+  _spawnSeedsButton: {fileID: 1167938171}
   seeds: 0
   mouseControl: 0
   villagerPlaced: 0
