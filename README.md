@@ -18,6 +18,8 @@ The villager will keep trying to detect tiles, but the tile detection function d
 
 
 Spam listened to this song while coding.
+<a href="https://stackoverflow.com/questions/3492153/markdown-open-a-new-window-link" target="_blank">example</a>
+
 
 <a href="https://www.youtube.com/watch?v=BctS652B2-g" target="_blank">
   <img src="https://user-images.githubusercontent.com/95230510/232323536-810c0753-f2fb-4dbf-8b19-ab5385d72af5.gif" alt="Shioriko GIF">
