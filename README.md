@@ -1,5 +1,5 @@
 # Installation
-Just download the [`F.A.R.M. 1.0 Installer.exe`](Installer/F.A.R.M.%201.0%20Installer.exe) in [`Installer`](https://github.com/naixsu/CMSC170/tree/main/Installer) and you're good to go.
+Just download the [`F.A.R.M. 2.0 Installer.exe`](https://github.com/naixsu/CMSC170/blob/main/Installer/F.A.R.M.%202.0%20Installer.exe) in [`Installer`](https://github.com/naixsu/CMSC170/tree/main/Installer) and you're good to go.
 
 ---
 
