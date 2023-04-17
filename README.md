@@ -1,4 +1,21 @@
+# Installation
 Just download the [`F.A.R.M. 1.0 Installer.exe`](Installer/F.A.R.M.%201.0%20Installer.exe) in [`Installer`](https://github.com/naixsu/CMSC170/tree/main/Installer) and you're good to go.
+
+## Known issue if running the game in Unity
+
+**This program will not work if there are lone tile(s)**
+
+Example below is a lone tile.
+
+![image](https://user-images.githubusercontent.com/95230510/232351740-d8bbd79a-bdd4-445d-8a9f-11a877b7db61.png)
+
+The villager will keep trying to detect tiles, but the tile detection function does not support tiles outside of the villager's active tile.
+
+![image](https://user-images.githubusercontent.com/95230510/232351959-88484cd7-7ae7-477a-9bb6-f2bf21f8cfc6.png)
+
+
+---
+
 
 Spam listened to this song while coding.
 
