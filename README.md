@@ -1,6 +1,8 @@
 # Installation
 Just download the [`F.A.R.M. 2.0 Installer.exe`](https://github.com/naixsu/CMSC170/blob/main/Installer/F.A.R.M.%202.0%20Installer.exe) in [`Installer`](https://github.com/naixsu/CMSC170/tree/main/Installer) and you're good to go.
 
+Can play directly [here](https://naixsu.itch.io/farmweb?secret=iAtMvgT5f83GHET88mrWD8RbyM).
+
 ---
 
 ## Resources used
