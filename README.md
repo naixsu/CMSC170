@@ -3,6 +3,8 @@ Just download the [`F.A.R.M. 2.0 Installer.exe`](https://github.com/naixsu/CMSC1
 
 Can play directly [here](https://naixsu.itch.io/farmweb?secret=iAtMvgT5f83GHET88mrWD8RbyM) (although the Quit button will not work in the credits scene).
 
+Revamped version [here](https://github.com/naixsu/FARM).
+
 ---
 
 ## Resources used
